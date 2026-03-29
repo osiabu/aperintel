@@ -6,7 +6,7 @@ This repository contains the official Aperintel website, hosted via GitHub Pages
 
 ## Live Site
 
-https://yourusername.github.io/aperintel
+https://abuj07.github.io/aperintel
 
 ## Structure
 
