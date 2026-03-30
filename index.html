@@ -1060,7 +1060,7 @@
   </footer>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(id).classList.add('active');
@@ -1089,4 +1089,37 @@
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
     document.querySelectorAll('.page.active .reveal').forEach(el => {
-      if (!el.classLi
+      if (!el.classList.contains('visible')) obs.observe(el);
+    });
+  }
+
+  // Formspree submission
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('contactForm');
+    const btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else {
+        btn.textContent = 'Something went wrong. Try again.';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Something went wrong. Try again.';
+      btn.disabled = false;
+    }
+  }
+
+  setTimeout(initReveal, 200);
+</script>
+</body>
+</html>
