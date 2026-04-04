@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start a Project | Aperintel</title>
+<meta name="description" content="Describe what you need built. Aperintel scopes, structures, and prepares a project brief for your review.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B0B;
+    --bg-2: #111111;
+    --bg-3: #171717;
+    --white: #FFFFFF;
+    --grey-1: #A1A1A1;
+    --grey-2: #555555;
+    --grey-3: #272727;
+    --accent: #5B73F5;
+    --accent-dim: rgba(91,115,245,0.10);
+    --accent-border: rgba(91,115,245,0.28);
+    --border: rgba(255,255,255,0.07);
+    --border-subtle: rgba(255,255,255,0.05);
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.10);
+    --green-border: rgba(74,222,128,0.28);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --nav-h: 60px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    background: rgba(11,11,11,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-size: 14px; font-weight: 500; color: var(--white); text-decoration: none; letter-spacing: 0.04em; }
+  .nav-back {
+    font-size: 13px; color: var(--grey-2); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--white); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* PHASE INDICATOR */
+  .phase-bar {
+    position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 90;
+    display: flex;
+    background: rgba(11,11,11,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+  .phase-step {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 10px 16px;
+    font-size: 12px; font-weight: 400;
+    color: var(--grey-2);
+    border-right: 1px solid var(--border);
+    transition: color 0.3s;
+    position: relative;
+  }
+  .phase-step:last-child { border-right: none; }
+  .phase-step.active { color: var(--white); }
+  .phase-step.done { color: var(--green); }
+  .phase-step .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--grey-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 500;
+    flex-shrink: 0;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .phase-step.active .step-num { border-color: var(--accent); color: var(--accent); }
+  .phase-step.done .step-num { border-color: var(--green); background: var(--green-dim); color: var(--green); }
+  .phase-step .step-label { display: none; }
+  @media (min-width: 600px) { .phase-step .step-label { display: inline; } }
+
+  /* MAIN CONTENT */
+  .main {
+    padding-top: calc(var(--nav-h) + 44px);
+    min-height: 100vh;
+  }
+
+  /* PHASE WRAPPER */
+  .phase { display: none; padding: 52px 24px 80px; max-width: 760px; margin: 0 auto; }
+  .phase.active { display: block; animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* PHASE 1: INPUT */
+  .phase-label {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px; display: block;
+  }
+  .phase-title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 500; letter-spacing: -0.03em;
+    line-height: 1.1; margin-bottom: 16px;
+  }
+  .phase-title em { font-style: normal; color: var(--grey-1); font-weight: 300; }
+  .phase-sub {
+    font-size: 16px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.7;
+    max-width: 560px; margin-bottom: 44px;
+  }
+
+  .input-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 28px;
+    margin-bottom: 16px;
+  }
+  .input-card-title {
+    font-size: 13px; font-weight: 500;
+    color: var(--grey-1); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .input-card-title .required {
+    font-size: 10px; color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 4px; padding: 2px 7px;
+  }
+  textarea.main-input {
+    width: 100%; background: var(--bg);
+    border: 1px solid var(--grey-3); border-radius: 9px;
+    padding: 16px 18px;
+    font-family: var(--font); font-size: 15px;
+    color: var(--white); outline: none;
+    resize: none; line-height: 1.7;
+    min-height: 160px;
+    transition: border-color 0.2s;
+  }
+  textarea.main-input::placeholder { color: var(--grey-2); }
+  textarea.main-input:focus { border-color: var(--accent-border); }
+  .char-count {
+    font-size: 11px; color: var(--grey-2);
+    text-align: right; margin-top: 6px;
+  }
+
+  /* Context expander */
+  .context-toggle {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--grey-2);
+    cursor: pointer; background: none; border: none;
+    font-family: var(--font); padding: 0;
+    transition: color 0.2s;
+    margin-bottom: 0;
+  }
+  .context-toggle:hover { color: var(--grey-1); }
+  .context-toggle svg { width: 14px; height: 14px; transition: transform 0.25s; }
+  .context-toggle.open svg { transform: rotate(180deg); }
+
+  .context-fields {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 20px;
+    animation: fadeUp 0.3s ease both;
+  }
+  .context-fields.open { display: grid; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--grey-2);
+  }
+  .form-group select,
+  .form-group input {
+    background: var(--bg);
+    border: 1px solid var(--grey-3); border-radius: 8px;
+    padding: 10px 13px;
+    font-family: var(--font); font-size: 14px;
+    color: var(--white); outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none; appearance: none;
+    min-height: 42px;
+  }
+  .form-group select:focus,
+  .form-group input:focus { border-color: var(--accent-border); }
+  .form-group select option { background: #1A1A1A; }
+
+  .phase-action-row {
+    display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap;
+    gap: 14px; margin-top: 28px;
+  }
+  .phase-hint { font-size: 12px; color: var(--grey-2); font-weight: 300; }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-size: 14px; font-weight: 500;
+    color: #0B0B0B; background: var(--white);
+    border: none; border-radius: 9px;
+    padding: 13px 28px; cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { opacity: 0.87; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-size: 14px; font-weight: 400;
+    color: var(--grey-1); background: none;
+    border: 1px solid var(--border);
+    border-radius: 9px; padding: 13px 28px;
+    cursor: pointer; text-decoration: none;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { color: var(--white); border-color: var(--accent-border); background: var(--accent-dim); }
+  .btn-approve {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-size: 14px; font-weight: 500;
+    color: #071a0e; background: var(--green);
+    border: none; border-radius: 9px;
+    padding: 13px 28px; cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-approve:hover { opacity: 0.87; transform: translateY(-1px); }
+
+  /* PHASE 2: PROCESSING */
+  #phaseProcessing {
+    display: none;
+    flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    padding: 100px 24px; gap: 24px;
+    min-height: 60vh;
+    animation: fadeUp 0.4s ease both;
+  }
+  #phaseProcessing.active { display: flex; }
+  .proc-ring {
+    width: 72px; height: 72px;
+    border: 1.5px solid var(--grey-3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .proc-title { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+  .proc-sub { font-size: 14px; color: var(--grey-2); font-weight: 300; max-width: 320px; line-height: 1.7; }
+
+  /* PHASE 3: BRIEF */
+  #phaseBrief { display: none; padding: 40px 24px 80px; max-width: 800px; margin: 0 auto; }
+  #phaseBrief.active { display: block; animation: fadeUp 0.4s ease both; }
+
+  .brief-header {
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brief-type-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px;
+    margin-bottom: 16px;
+  }
+  .badge-aperintel { background: var(--accent-dim); color: #8096FF; border: 1px solid var(--accent-border); }
+  .badge-custom { background: rgba(168,85,247,0.1); color: #c084fc; border: 1px solid rgba(168,85,247,0.25); }
+  .badge-hybrid { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .brief-solution-name {
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 500; letter-spacing: -0.025em;
+    line-height: 1.15; margin-bottom: 20px;
+  }
+  .brief-solution-desc {
+    font-size: 15px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  /* Aperintel products used */
+  .products-used {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 20px;
+  }
+  .product-chip {
+    font-size: 12px; font-weight: 400;
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    background: var(--accent-dim);
+    border-radius: 100px; padding: 4px 12px;
+  }
+
+  /* Project brief items */
+  .brief-items-section {
+    margin-bottom: 32px;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .brief-items-section.visible { opacity: 1; transform: none; }
+
+  .brief-section-label {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px; display: block;
+  }
+
+  .brief-items-list {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .brief-item {
+    display: flex; gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .brief-item:first-child { border-radius: 12px 12px 0 0; }
+  .brief-item:last-child { border-radius: 0 0 12px 12px; }
+  .brief-item:only-child { border-radius: 12px; }
+  .brief-item:hover { border-color: var(--grey-3); background: var(--bg-3); }
+  .brief-item-num {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    color: var(--accent); flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .brief-item-content { flex: 1; }
+  .brief-item-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; line-height: 1.3; }
+  .brief-item-detail { font-size: 13.5px; color: var(--grey-1); font-weight: 300; line-height: 1.65; }
+
+  /* Deliverables and timeline */
+  .brief-meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 32px;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+  }
+  .brief-meta-grid.visible { opacity: 1; transform: none; }
+  .meta-card {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 11px; padding: 18px 20px;
+  }
+  .meta-card-title {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 10px; display: block;
+  }
+  .meta-card-content { font-size: 14px; color: var(--grey-1); font-weight: 300; line-height: 1.65; }
+  .meta-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .meta-list li {
+    font-size: 13.5px; color: var(--grey-1); font-weight: 300;
+    padding-left: 14px; position: relative;
+  }
+  .meta-list li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+  }
+
+  /* Next steps */
+  .next-steps-card {
+    background: var(--bg-3); border-left: 2px solid var(--accent);
+    border-radius: 0 11px 11px 0; padding: 18px 20px;
+    margin-bottom: 32px; font-size: 14px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.75;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+  }
+  .next-steps-card.visible { opacity: 1; transform: none; }
+
+  /* Approval actions */
+  .brief-actions {
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap; padding-top: 28px;
+    border-top: 1px solid var(--border);
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+  }
+  .brief-actions.visible { opacity: 1; transform: none; }
+  .approval-note {
+    font-size: 12px; color: var(--grey-2);
+    font-weight: 300; line-height: 1.6;
+    max-width: 360px;
+  }
+
+  /* PHASE 4: CONTACT */
+  #phaseContact { display: none; padding: 40px 24px 80px; max-width: 640px; margin: 0 auto; }
+  #phaseContact.active { display: block; animation: fadeUp 0.4s ease both; }
+
+  .approved-banner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    border-radius: 10px;
+    margin-bottom: 32px;
+  }
+  .approved-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--green);
+    font-size: 16px;
+  }
+  .approved-text { font-size: 14px; font-weight: 400; color: var(--green); }
+  .approved-sub { font-size: 12px; color: var(--grey-1); font-weight: 300; }
+
+  .contact-card {
+    background: var(--bg-2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 32px 28px;
+    margin-bottom: 20px;
+  }
+  .contact-card h3 { font-size: 18px; font-weight: 500; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .contact-card p { font-size: 14px; color: var(--grey-1); font-weight: 300; line-height: 1.65; margin-bottom: 24px; }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .contact-grid .full-col { grid-column: 1 / -1; }
+  .contact-group { display: flex; flex-direction: column; gap: 6px; }
+  .contact-group label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--grey-2);
+  }
+  .contact-group input,
+  .contact-group textarea {
+    background: var(--bg); border: 1px solid var(--grey-3);
+    border-radius: 8px; padding: 11px 14px;
+    font-family: var(--font); font-size: 14px;
+    color: var(--white); outline: none;
+    transition: border-color 0.2s;
+    min-height: 44px;
+  }
+  .contact-group textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+  .contact-group input::placeholder,
+  .contact-group textarea::placeholder { color: var(--grey-2); }
+  .contact-group input:focus,
+  .contact-group textarea:focus { border-color: var(--accent-border); }
+
+  .submit-row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin-top: 24px;
+  }
+  .submit-note { font-size: 12px; color: var(--grey-2); font-weight: 300; }
+
+  /* PHASE 5: CONFIRMATION */
+  #phaseConfirm {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    padding: 80px 24px; gap: 20px; min-height: 60vh;
+  }
+  #phaseConfirm.active { display: flex; animation: fadeUp 0.5s ease both; }
+  .confirm-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    border: 1px solid var(--green-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 8px;
+  }
+  .confirm-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 500; letter-spacing: -0.025em; line-height: 1.1;
+  }
+  .confirm-sub {
+    font-size: 16px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.7; max-width: 440px;
+  }
+  .confirm-ref {
+    font-size: 13px; font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
+    border-radius: 8px; padding: 10px 20px;
+    letter-spacing: 0.04em;
+  }
+  .confirm-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+  @media (max-width: 600px) {
+    .context-fields { grid-template-columns: 1fr; }
+    .brief-meta-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .phase-action-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Aperintel</a>
+  <a class="nav-back" href="index.html">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Back to site
+  </a>
+</nav>
+
+<div class="phase-bar" id="phaseBar">
+  <div class="phase-step active" id="ps1">
+    <span class="step-num">1</span>
+    <span class="step-label">Describe</span>
+  </div>
+  <div class="phase-step" id="ps2">
+    <span class="step-num">2</span>
+    <span class="step-label">Review Brief</span>
+  </div>
+  <div class="phase-step" id="ps3">
+    <span class="step-num">3</span>
+    <span class="step-label">Your Details</span>
+  </div>
+  <div class="phase-step" id="ps4">
+    <span class="step-num">4</span>
+    <span class="step-label">Submitted</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PHASE 1: DESCRIBE -->
+  <div class="phase active" id="phase1">
+    <span class="phase-label">Start a Project</span>
+    <h1 class="phase-title">Tell us what you<br><em>need built.</em></h1>
+    <p class="phase-sub">Describe your idea, problem, or vision. Our intelligence layer will scope it, structure it, and prepare a project brief for your review — whether it fits our existing systems or requires something completely bespoke.</p>
+
+    <div class="input-card">
+      <div class="input-card-title">
+        Describe your project or problem
+        <span class="required">Required</span>
+      </div>
+      <textarea
+        class="main-input"
+        id="descriptionInput"
+        placeholder="Tell us what you are trying to build or solve. The more detail you provide, the more precise the brief will be. You can describe a product idea, a business problem, a process you want to automate, or a system you want built from scratch."
+        oninput="updateCharCount(this)"
+        maxlength="3000"
+      ></textarea>
+      <div class="char-count"><span id="charCount">0</span> / 3000</div>
+    </div>
+
+    <div class="input-card" style="padding-bottom: 24px;">
+      <button class="context-toggle" id="contextToggle" onclick="toggleContext()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+        Add context (industry, scale, budget, timeline)
+      </button>
+      <div class="context-fields" id="contextFields">
+        <div class="form-group">
+          <label for="ctxIndustry">Industry</label>
+          <select id="ctxIndustry">
+            <option value="">Select industry...</option>
+            <option>Financial Services</option>
+            <option>Technology</option>
+            <option>Healthcare</option>
+            <option>Professional Services</option>
+            <option>Education</option>
+            <option>Retail and Commerce</option>
+            <option>Government and Public Sector</option>
+            <option>Community and Non-profit</option>
+            <option>Media and Entertainment</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ctxScale">Organisation Scale</label>
+          <select id="ctxScale">
+            <option value="">Select scale...</option>
+            <option>Individual / Solo</option>
+            <option>Small (2 to 25 people)</option>
+            <option>Mid-size (26 to 250 people)</option>
+            <option>Large (250 or more people)</option>
+            <option>Enterprise (1000 or more people)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ctxBudget">Budget Range</label>
+          <select id="ctxBudget">
+            <option value="">Select budget...</option>
+            <option>Under £5,000</option>
+            <option>£5,000 to £15,000</option>
+            <option>£15,000 to £50,000</option>
+            <option>£50,000 to £150,000</option>
+            <option>£150,000 or above</option>
+            <option>To be discussed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="ctxTimeline">Desired Timeline</label>
+          <select id="ctxTimeline">
+            <option value="">Select timeline...</option>
+            <option>As soon as possible</option>
+            <option>Within 1 month</option>
+            <option>1 to 3 months</option>
+            <option>3 to 6 months</option>
+            <option>6 to 12 months</option>
+            <option>Flexible</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-action-row">
+      <p class="phase-hint">Claude will scope your request and generate a structured project brief. This usually takes 15 to 30 seconds.</p>
+      <button class="btn-primary" id="generateBtn" onclick="generateSolution()">
+        Generate Project Brief
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 2: PROCESSING -->
+  <div id="phaseProcessing">
+    <div class="proc-ring"></div>
+    <p class="proc-title">Scoping your requirements</p>
+    <p class="proc-sub">Claude is analysing your description and preparing a structured project brief.</p>
+  </div>
+
+  <!-- PHASE 3: BRIEF REVIEW -->
+  <div id="phaseBrief">
+    <div class="brief-header">
+      <span class="brief-type-badge" id="briefTypeBadge">Custom Development</span>
+      <h2 class="brief-solution-name" id="briefSolutionName"></h2>
+      <p class="brief-solution-desc" id="briefSolutionDesc"></p>
+      <div class="products-used" id="productsUsed"></div>
+    </div>
+
+    <div class="brief-items-section" id="sectionItems">
+      <span class="brief-section-label">Project Requirements</span>
+      <div class="brief-items-list" id="briefItemsList"></div>
+    </div>
+
+    <div class="brief-meta-grid" id="sectionMeta">
+      <div class="meta-card">
+        <span class="meta-card-title">Estimated Timeline</span>
+        <p class="meta-card-content" id="briefTimeline"></p>
+      </div>
+      <div class="meta-card">
+        <span class="meta-card-title">Key Deliverables</span>
+        <ul class="meta-list" id="briefDeliverables"></ul>
+      </div>
+    </div>
+
+    <div class="next-steps-card" id="sectionNextSteps"></div>
+
+    <div class="brief-actions" id="briefActions">
+      <button class="btn-approve" onclick="approveBrief()">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+        </svg>
+        Approve Project Brief
+      </button>
+      <button class="btn-ghost" onclick="reviseBrief()">Revise Requirements</button>
+      <p class="approval-note">By approving, you confirm this brief accurately represents what you need. The Aperintel team will review and respond within 2 business days.</p>
+    </div>
+  </div>
+
+  <!-- PHASE 4: CONTACT DETAILS -->
+  <div id="phaseContact">
+    <div class="approved-banner">
+      <div class="approved-icon">✓</div>
+      <div>
+        <p class="approved-text">Brief approved</p>
+        <p class="approved-sub">Enter your details to send this to the Aperintel development team.</p>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <h3>Your contact details</h3>
+      <p>Once submitted, a member of the Aperintel team will review your brief and be in touch to discuss next steps.</p>
+
+      <div class="contact-grid">
+        <div class="contact-group">
+          <label for="contactName">Full Name</label>
+          <input type="text" id="contactName" placeholder="Your name">
+        </div>
+        <div class="contact-group">
+          <label for="contactEmail">Email Address</label>
+          <input type="email" id="contactEmail" placeholder="your@email.com">
+        </div>
+        <div class="contact-group full-col">
+          <label for="contactOrg">Organisation (optional)</label>
+          <input type="text" id="contactOrg" placeholder="Your company or organisation">
+        </div>
+        <div class="contact-group full-col">
+          <label for="contactNotes">Additional notes (optional)</label>
+          <textarea id="contactNotes" placeholder="Anything else you would like us to know before we review your brief..."></textarea>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-primary" id="submitBtn" onclick="submitBrief()">
+          Send to Aperintel Development Team
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+          </svg>
+        </button>
+        <p class="submit-note">We respond within 2 business days.</p>
+      </div>
+    </div>
+
+    <button class="btn-ghost" style="font-size:13px;" onclick="backToBrief()">← Review brief again</button>
+  </div>
+
+  <!-- PHASE 5: CONFIRMATION -->
+  <div id="phaseConfirm">
+    <div class="confirm-icon">✓</div>
+    <h2 class="confirm-title">Brief submitted.</h2>
+    <p class="confirm-sub">The Aperintel development team has received your project brief and will review it shortly.</p>
+    <div class="confirm-ref" id="confirmRef">Reference: —</div>
+    <p class="confirm-sub" style="font-size:14px;">Keep your reference number. We will use it when we get back to you.</p>
+    <div class="confirm-actions">
+      <a href="index.html" class="btn-primary">Back to Aperintel</a>
+      <a href="solution-brief.html" class="btn-ghost">Start another brief</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentSolution = null;
+
+function updateCharCount(el) {
+  document.getElementById('charCount').textContent = el.value.length;
+}
+
+function toggleContext() {
+  const toggle = document.getElementById('contextToggle');
+  const fields = document.getElementById('contextFields');
+  toggle.classList.toggle('open');
+  fields.classList.toggle('open');
+}
+
+function setPhase(num) {
+  // Hide all content areas
+  ['phase1', 'phaseProcessing', 'phaseBrief', 'phaseContact', 'phaseConfirm'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('active');
+    el.style.display = '';
+  });
+
+  // Map phase num to element
+  const phaseMap = { 1: 'phase1', 2: 'phaseProcessing', 3: 'phaseBrief', 4: 'phaseContact', 5: 'phaseConfirm' };
+  const target = document.getElementById(phaseMap[num]);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  // Update phase bar
+  for (let i = 1; i <= 4; i++) {
+    const step = document.getElementById('ps' + i);
+    step.classList.remove('active', 'done');
+    const barPhase = num === 2 ? 1 : (num === 3 ? 2 : (num === 4 ? 3 : (num === 5 ? 4 : num)));
+    if (i < barPhase) step.classList.add('done');
+    else if (i === barPhase) step.classList.add('active');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function generateSolution() {
+  const description = document.getElementById('descriptionInput').value.trim();
+  if (description.length < 20) {
+    alert('Please describe your project in a bit more detail so we can scope it properly.');
+    return;
+  }
+
+  setPhase(2);
+
+  const industry = document.getElementById('ctxIndustry').value;
+  const scale = document.getElementById('ctxScale').value;
+  const budget = document.getElementById('ctxBudget').value;
+  const timeline = document.getElementById('ctxTimeline').value;
+
+  try {
+    const res = await fetch('/api/solution', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description, industry, scale, budget, timeline })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Generation failed.');
+    }
+
+    currentSolution = await res.json();
+    renderBrief(currentSolution);
+    setPhase(3);
+
+  } catch (err) {
+    setPhase(1);
+    alert(err.message || 'Something went wrong. Please try again.');
+  }
+}
+
+function renderBrief(s) {
+  // Badge
+  const badge = document.getElementById('briefTypeBadge');
+  badge.textContent = s.solutionType || 'Custom Development';
+  badge.className = 'brief-type-badge';
+  if (s.solutionType === 'Aperintel Product Fit') badge.classList.add('badge-aperintel');
+  else if (s.solutionType === 'Hybrid Solution') badge.classList.add('badge-hybrid');
+  else badge.classList.add('badge-custom');
+
+  document.getElementById('briefSolutionName').textContent = s.solutionName || '';
+  document.getElementById('briefSolutionDesc').textContent = s.solutionDescription || '';
+
+  // Aperintel products
+  const productsEl = document.getElementById('productsUsed');
+  productsEl.innerHTML = '';
+  if (s.aperintelProducts && s.aperintelProducts.length > 0) {
+    s.aperintelProducts.forEach(p => {
+      const chip = document.createElement('span');
+      chip.className = 'product-chip';
+      chip.textContent = p;
+      productsEl.appendChild(chip);
+    });
+  }
+
+  // Brief items
+  const list = document.getElementById('briefItemsList');
+  list.innerHTML = (s.brief || []).map(item => `
+    <div class="brief-item">
+      <div class="brief-item-num">${item.n}</div>
+      <div class="brief-item-content">
+        <div class="brief-item-title">${item.title}</div>
+        <div class="brief-item-detail">${item.detail}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Timeline and deliverables
+  document.getElementById('briefTimeline').textContent = s.timeline || '';
+  document.getElementById('briefDeliverables').innerHTML = (s.deliverables || []).map(d => `<li>${d}</li>`).join('');
+
+  // Next steps
+  document.getElementById('sectionNextSteps').textContent = s.nextSteps || '';
+
+  // Staggered reveal
+  setTimeout(() => document.getElementById('sectionItems').classList.add('visible'), 100);
+  setTimeout(() => document.getElementById('sectionMeta').classList.add('visible'), 260);
+  setTimeout(() => document.getElementById('sectionNextSteps').classList.add('visible'), 400);
+  setTimeout(() => document.getElementById('briefActions').classList.add('visible'), 520);
+}
+
+function approveBrief() {
+  setPhase(4);
+}
+
+function reviseBrief() {
+  setPhase(1);
+  window.scrollTo({ top: 0 });
+  setTimeout(() => document.getElementById('descriptionInput').focus(), 400);
+}
+
+function backToBrief() {
+  setPhase(3);
+}
+
+async function submitBrief() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+
+  if (!name || !email) {
+    alert('Please enter your name and email address.');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
+  const contact = {
+    name,
+    email,
+    organisation: document.getElementById('contactOrg').value.trim(),
+    notes: document.getElementById('contactNotes').value.trim()
+  };
+
+  const description = document.getElementById('descriptionInput').value.trim();
+  const context = {
+    industry: document.getElementById('ctxIndustry').value,
+    scale: document.getElementById('ctxScale').value,
+    budget: document.getElementById('ctxBudget').value,
+    timeline: document.getElementById('ctxTimeline').value
+  };
+
+  try {
+    const res = await fetch('/api/submit-brief', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ solution: currentSolution, contact, originalDescription: description, context })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Submission failed.');
+
+    document.getElementById('confirmRef').textContent = `Reference: ${data.reference}`;
+    setPhase(5);
+
+  } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Send to Aperintel Development Team';
+    alert(err.message || 'Something went wrong. Please try again.');
+  }
+}
+</script>
+</body>
+</html>
