@@ -47,7 +47,9 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
 }
 
 Available Aperintel products to recommend from: Enterprise Platform, Avant, Tipintel, Wingman, Aoura, Aces, YoungTekkie, Orion, Titan OS, The Depression Project.
-Only recommend products that genuinely fit their described challenge. Be specific and insightful — not generic.`;
+Only recommend products that genuinely fit their described challenge. Be specific and insightful, not generic.
+
+FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in your response. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences instead.`;
 
   try {
     const message = await client.messages.create({

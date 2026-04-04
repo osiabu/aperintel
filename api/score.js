@@ -57,7 +57,9 @@ Intelligence levels:
 - 61-80: Advanced (intelligent processes, room for deeper systems)
 - 81-100: Intelligent (AI-native, structured, compounding)
 
-Be honest and specific. A score that is too high means nothing. The value is in the precision of the gaps and the clarity of the path forward.`;
+Be honest and specific. A score that is too high means nothing. The value is in the precision of the gaps and the clarity of the path forward.
+
+FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in the JSON string values. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences instead.`;
 
   try {
     const message = await client.messages.create({

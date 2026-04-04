@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligence Maturity Score | Aperintel</title>
+<meta name="description" content="Discover your organisation's intelligence maturity. 5 questions. A precise 0–100 score with strengths, gaps, and a clear path forward.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B0B;
+    --bg-2: #111111;
+    --bg-3: #171717;
+    --white: #FFFFFF;
+    --grey-1: #A1A1A1;
+    --grey-2: #555555;
+    --grey-3: #272727;
+    --accent: #5B73F5;
+    --accent-dim: rgba(91,115,245,0.10);
+    --accent-border: rgba(91,115,245,0.28);
+    --border: rgba(255,255,255,0.07);
+    --border-subtle: rgba(255,255,255,0.05);
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    background: rgba(11,11,11,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-size: 14px; font-weight: 500;
+    color: var(--white); text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+  .nav-back {
+    font-size: 13px; color: var(--grey-2);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--white); }
+  .nav-back svg { width: 14px; height: 14px; }
+
+  /* SCREENS */
+  .screen {
+    display: none;
+    min-height: 100vh;
+    padding-top: 60px;
+  }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ── WELCOME SCREEN ── */
+  #screenWelcome {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px 80px;
+  }
+  .welcome-label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    background: var(--accent-dim);
+    border-radius: 100px;
+    padding: 6px 16px;
+    display: inline-block;
+    margin-bottom: 36px;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .welcome-title {
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    max-width: 600px;
+    animation: fadeUp 0.8s ease 0.25s both;
+    margin-bottom: 24px;
+  }
+  .welcome-title em { font-style: normal; color: var(--grey-1); font-weight: 300; }
+  .welcome-sub {
+    font-size: 17px; font-weight: 300;
+    color: var(--grey-1);
+    max-width: 440px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s ease 0.4s both;
+    margin-bottom: 48px;
+  }
+  .welcome-meta {
+    display: flex; gap: 32px;
+    justify-content: center;
+    margin-bottom: 52px;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+  .welcome-meta-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .welcome-meta-num {
+    font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
+    color: var(--white);
+  }
+  .welcome-meta-label {
+    font-size: 11px; color: var(--grey-2); letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .welcome-meta-sep {
+    width: 1px; background: var(--border); align-self: stretch;
+  }
+  .btn-start {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font); font-size: 15px; font-weight: 500;
+    color: #0B0B0B; background: var(--white);
+    border: none; border-radius: 10px;
+    padding: 16px 36px; cursor: pointer;
+    animation: fadeUp 0.8s ease 0.6s both;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-start:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-start svg { width: 16px; height: 16px; }
+
+  /* ── QUESTION SCREEN ── */
+  #screenQuestion {
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+  }
+  .q-progress {
+    display: flex; gap: 6px;
+    margin-bottom: 52px;
+    position: fixed;
+    top: 60px; left: 0; right: 0;
+    padding: 12px 32px;
+    background: rgba(11,11,11,0.6);
+    backdrop-filter: blur(8px);
+    z-index: 50;
+  }
+  .q-prog-bar {
+    flex: 1; height: 2px;
+    background: var(--grey-3);
+    border-radius: 1px;
+    transition: background 0.4s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  .q-prog-bar::after {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    height: 100%; width: 0;
+    background: var(--accent);
+    border-radius: 1px;
+    transition: width 0.5s ease;
+  }
+  .q-prog-bar.done::after { width: 100%; }
+  .q-prog-bar.active::after { width: 50%; }
+
+  .q-wrap {
+    max-width: 680px;
+    width: 100%;
+  }
+  .q-number {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+    display: block;
+  }
+  .q-text {
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    margin-bottom: 36px;
+  }
+  .q-options {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 36px;
+  }
+  .q-option {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    user-select: none;
+  }
+  .q-option:hover { border-color: var(--accent-border); background: var(--bg-3); }
+  .q-option.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .q-option:hover { transform: translateX(3px); }
+  .q-option.selected { transform: none; }
+  .q-opt-key {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--grey-3);
+    background: var(--bg-3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500;
+    color: var(--grey-2);
+    flex-shrink: 0;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  }
+  .q-option.selected .q-opt-key {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+  .q-opt-text {
+    font-size: 15px; font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .q-nav {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .q-nav-back {
+    font-size: 13px; color: var(--grey-2);
+    background: none; border: none;
+    cursor: pointer; font-family: var(--font);
+    padding: 0; transition: color 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .q-nav-back:hover { color: var(--grey-1); }
+  .q-nav-hint {
+    font-size: 12px; color: var(--grey-3);
+  }
+  .q-nav-next {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 500;
+    color: var(--white); background: var(--accent);
+    border: none; border-radius: 8px;
+    padding: 12px 24px; cursor: pointer;
+    font-family: var(--font);
+    transition: opacity 0.2s, transform 0.15s;
+    min-height: 44px;
+  }
+  .q-nav-next:hover { opacity: 0.85; transform: translateX(2px); }
+  .q-nav-next:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+
+  /* question transition */
+  .q-wrap { animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ── PROCESSING SCREEN ── */
+  #screenProcessing {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 28px;
+  }
+  .processing-visual {
+    position: relative;
+    width: 80px; height: 80px;
+  }
+  .processing-ring {
+    width: 80px; height: 80px;
+    border: 1.5px solid var(--grey-3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .processing-title {
+    font-size: 22px; font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .processing-sub {
+    font-size: 14px; color: var(--grey-2);
+    font-weight: 300; max-width: 300px;
+  }
+
+  /* ── RESULTS SCREEN ── */
+  #screenResult {
+    display: none;
+    padding: 100px 24px 80px;
+  }
+  #screenResult.active {
+    display: block;
+  }
+  .result-inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .result-hero {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 52px;
+    padding-bottom: 52px;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .result-dial-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 140px; height: 140px;
+  }
+  .result-dial-wrap svg { width: 140px; height: 140px; }
+  .dial-track { fill: none; stroke: var(--grey-3); stroke-width: 7; }
+  .dial-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 377;
+    stroke-dashoffset: 377;
+    transform: rotate(-90deg);
+    transform-origin: 70px 70px;
+    transition: stroke-dashoffset 2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                stroke 0.5s ease;
+  }
+  .result-dial-num {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; font-weight: 500; letter-spacing: -0.03em;
+  }
+  .result-hero-text { flex: 1; }
+  .result-level {
+    display: inline-block;
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 100px;
+    margin-bottom: 12px;
+  }
+  .level-fragmented { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+  .level-emerging    { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
+  .level-structured  { background: rgba(234,179,8,0.12); color: #facc15; border: 1px solid rgba(234,179,8,0.25); }
+  .level-advanced    { background: rgba(91,115,245,0.12); color: #8096FF; border: 1px solid rgba(91,115,245,0.25); }
+  .level-intelligent { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+  .result-headline {
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .result-summary {
+    font-size: 15px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.7;
+  }
+
+  .result-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-bottom: 16px;
+    animation: fadeUp 0.7s ease 0.25s both;
+  }
+  .result-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+  .result-card-title {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 14px; display: block;
+  }
+  .result-card.strengths .result-card-title { color: #4ade80; }
+  .result-card.gaps .result-card-title { color: var(--accent); }
+  .result-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .result-card ul li {
+    font-size: 14px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.5;
+    padding-left: 14px; position: relative;
+  }
+  .result-card.strengths ul li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 50%; background: #4ade80;
+  }
+  .result-card.gaps ul li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+  }
+
+  .result-rec {
+    background: var(--bg-2);
+    border: 1px solid var(--accent-border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.7s ease 0.35s both;
+  }
+  .result-rec-label {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 8px; display: block;
+  }
+  .result-rec-product { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .result-rec-reason { font-size: 14px; color: var(--grey-1); font-weight: 300; line-height: 1.65; }
+
+  .result-nextstep {
+    background: var(--bg-3);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 20px;
+    font-size: 14px; color: var(--grey-1);
+    font-weight: 300; line-height: 1.7;
+    margin-bottom: 40px;
+    animation: fadeUp 0.7s ease 0.45s both;
+  }
+
+  .result-actions {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    animation: fadeUp 0.7s ease 0.55s both;
+  }
+  .btn-primary-lg {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-size: 14px; font-weight: 500;
+    color: #0B0B0B; background: var(--white);
+    border: none; border-radius: 9px;
+    padding: 14px 28px; cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .btn-primary-lg:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-ghost-lg {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font); font-size: 14px; font-weight: 400;
+    color: var(--grey-1); background: none;
+    border: 1px solid var(--border);
+    border-radius: 9px; padding: 14px 28px;
+    cursor: pointer; text-decoration: none;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost-lg:hover {
+    color: var(--white);
+    border-color: var(--accent-border);
+    background: var(--accent-dim);
+  }
+  .result-retake {
+    font-size: 12px; color: var(--grey-2);
+    background: none; border: none;
+    cursor: pointer; font-family: var(--font);
+    text-decoration: underline; text-underline-offset: 3px;
+    padding: 0; transition: color 0.2s;
+    align-self: center;
+  }
+  .result-retake:hover { color: var(--grey-1); }
+
+  /* Dial color variants */
+  .dial-fill.score-fragmented { stroke: #ef4444; }
+  .dial-fill.score-emerging    { stroke: #f97316; }
+  .dial-fill.score-structured  { stroke: #eab308; }
+  .dial-fill.score-advanced    { stroke: var(--accent); }
+  .dial-fill.score-intelligent { stroke: #4ade80; }
+
+  @media (max-width: 640px) {
+    .result-hero { flex-direction: column; align-items: flex-start; gap: 28px; }
+    .result-grid { grid-template-columns: 1fr; }
+    .q-text { font-size: 22px; }
+    .welcome-meta { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Aperintel</a>
+  <a class="nav-back" href="index.html">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Back to site
+  </a>
+</nav>
+
+<!-- WELCOME -->
+<div class="screen active" id="screenWelcome">
+  <span class="welcome-label">Intelligence Maturity</span>
+  <h1 class="welcome-title">How intelligent is your<br><em>organisation?</em></h1>
+  <p class="welcome-sub">Five questions. A precise score from 0 to 100. Real strengths, real gaps, and a clear path forward — generated by Claude in real time.</p>
+  <div class="welcome-meta">
+    <div class="welcome-meta-item">
+      <span class="welcome-meta-num">5</span>
+      <span class="welcome-meta-label">Questions</span>
+    </div>
+    <div class="welcome-meta-sep"></div>
+    <div class="welcome-meta-item">
+      <span class="welcome-meta-num">2</span>
+      <span class="welcome-meta-label">Minutes</span>
+    </div>
+    <div class="welcome-meta-sep"></div>
+    <div class="welcome-meta-item">
+      <span class="welcome-meta-num">0–100</span>
+      <span class="welcome-meta-label">Score</span>
+    </div>
+  </div>
+  <button class="btn-start" onclick="startAssessment()">
+    Begin Assessment
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+    </svg>
+  </button>
+</div>
+
+<!-- QUESTION -->
+<div class="screen" id="screenQuestion">
+  <div class="q-progress" id="qProgress">
+    <div class="q-prog-bar active" id="qp1"></div>
+    <div class="q-prog-bar" id="qp2"></div>
+    <div class="q-prog-bar" id="qp3"></div>
+    <div class="q-prog-bar" id="qp4"></div>
+    <div class="q-prog-bar" id="qp5"></div>
+  </div>
+  <div class="q-wrap" id="qWrap"></div>
+</div>
+
+<!-- PROCESSING -->
+<div class="screen" id="screenProcessing">
+  <div class="processing-visual">
+    <div class="processing-ring"></div>
+  </div>
+  <p class="processing-title">Analysing your profile</p>
+  <p class="processing-sub">Claude is structuring your intelligence assessment…</p>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="screenResult">
+  <div class="result-inner">
+
+    <div class="result-hero" id="resultHero">
+      <div class="result-dial-wrap">
+        <svg viewBox="0 0 140 140">
+          <circle class="dial-track" cx="70" cy="70" r="60"/>
+          <circle class="dial-fill" id="dialFill" cx="70" cy="70" r="60"/>
+        </svg>
+        <div class="result-dial-num" id="dialNum">0</div>
+      </div>
+      <div class="result-hero-text">
+        <span class="result-level" id="resultLevel">—</span>
+        <p class="result-headline" id="resultHeadline"></p>
+        <p class="result-summary" id="resultSummary"></p>
+      </div>
+    </div>
+
+    <div class="result-grid" id="resultGrid">
+      <div class="result-card strengths">
+        <span class="result-card-title">Strengths</span>
+        <ul id="resultStrengths"></ul>
+      </div>
+      <div class="result-card gaps">
+        <span class="result-card-title">Intelligence Gaps</span>
+        <ul id="resultGaps"></ul>
+      </div>
+    </div>
+
+    <div class="result-rec" id="resultRec">
+      <span class="result-rec-label">Recommended System</span>
+      <p class="result-rec-product" id="resultRecProduct"></p>
+      <p class="result-rec-reason" id="resultRecReason"></p>
+    </div>
+
+    <div class="result-nextstep" id="resultNextStep"></div>
+
+    <div class="result-actions">
+      <a href="intelligence-brief.html" class="btn-primary-lg">
+        Generate Intelligence Brief
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+      <a href="index.html#contact" onclick="window.location='index.html'" class="btn-ghost-lg">Request Access</a>
+      <button class="result-retake" onclick="retakeAssessment()">Retake assessment</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "How does your organisation primarily make decisions?",
+    opts: [
+      "Mostly gut feel and experience",
+      "Ad hoc data when it's available",
+      "Regular reports and dashboards",
+      "Structured data with clear processes",
+      "AI-assisted, continuous intelligence"
+    ]
+  },
+  {
+    q: "How would you describe your data situation?",
+    opts: [
+      "Data is scattered and hard to access",
+      "We collect data but rarely use it well",
+      "Some teams use data effectively",
+      "Data is organised and mostly accessible",
+      "Unified data infrastructure, real-time access"
+    ]
+  },
+  {
+    q: "How automated are your key workflows?",
+    opts: [
+      "Almost everything is manual",
+      "A few things are automated, mostly not",
+      "Core processes are automated",
+      "Most workflows run automatically",
+      "Fully automated with AI oversight"
+    ]
+  },
+  {
+    q: "How does your organisation respond to change?",
+    opts: [
+      "We react after things happen",
+      "We notice problems fairly quickly",
+      "We have some early warning systems",
+      "We anticipate most changes",
+      "We predict and prepare continuously"
+    ]
+  },
+  {
+    q: "What best describes your AI capability today?",
+    opts: [
+      "We don't really use AI",
+      "We use AI tools occasionally",
+      "AI is used in specific areas",
+      "AI is integrated into key processes",
+      "AI is embedded across all systems"
+    ]
+  }
+];
+
+let step = 0;
+let answers = new Array(5).fill(null);
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function startAssessment() {
+  step = 0;
+  answers = new Array(5).fill(null);
+  showScreen('screenQuestion');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[step];
+  const wrap = document.getElementById('qWrap');
+
+  wrap.style.animation = 'none';
+  wrap.offsetHeight; // reflow
+  wrap.style.animation = 'fadeUp 0.35s ease both';
+
+  wrap.innerHTML = `
+    <span class="q-number">Question ${step + 1} of ${QUESTIONS.length}</span>
+    <p class="q-text">${q.q}</p>
+    <div class="q-options">
+      ${q.opts.map((opt, i) => `
+        <div class="q-option${answers[step] === i ? ' selected' : ''}" onclick="selectAnswer(${i})" data-idx="${i}">
+          <div class="q-opt-key">${i + 1}</div>
+          <span class="q-opt-text">${opt}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="q-nav">
+      <button class="q-nav-back" onclick="navBack()" style="visibility:${step === 0 ? 'hidden' : 'visible'}">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+        </svg>
+        Back
+      </button>
+      <span class="q-nav-hint">${step < 4 ? 'Press 1–5 to select, Enter to continue' : ''}</span>
+      <button class="q-nav-next" id="qNext" onclick="navNext()" ${answers[step] === null ? 'disabled' : ''}>
+        ${step === 4 ? 'Calculate Score' : 'Next question'}
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
+    </div>
+  `;
+
+  updateProgressBars();
+}
+
+function updateProgressBars() {
+  for (let i = 1; i <= 5; i++) {
+    const bar = document.getElementById(`qp${i}`);
+    bar.classList.remove('active', 'done');
+    if (i - 1 === step) bar.classList.add('active');
+    else if (i - 1 < step) bar.classList.add('done');
+  }
+}
+
+function selectAnswer(idx) {
+  answers[step] = idx;
+  renderQuestion();
+}
+
+function navBack() {
+  if (step > 0) { step--; renderQuestion(); }
+}
+
+function navNext() {
+  if (answers[step] === null) return;
+  if (step < 4) { step++; renderQuestion(); }
+  else { submitAssessment(); }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('screenQuestion').classList.contains('active')) {
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= 5) { selectAnswer(num - 1); }
+    if (e.key === 'Enter' && answers[step] !== null) { navNext(); }
+  }
+});
+
+async function submitAssessment() {
+  showScreen('screenProcessing');
+  const builtAnswers = QUESTIONS.map((q, i) => ({
+    question: q.q,
+    answer: q.opts[answers[i]]
+  }));
+  try {
+    const res = await fetch('/api/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ answers: builtAnswers })
+    });
+    const data = await res.json();
+    renderResult(data);
+  } catch {
+    showScreen('screenWelcome');
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+function renderResult(data) {
+  const score = Math.min(100, Math.max(0, data.score || 0));
+  const level = (data.level || 'Assessed').toLowerCase();
+
+  // Level badge
+  const levelEl = document.getElementById('resultLevel');
+  levelEl.textContent = data.level || 'Assessed';
+  levelEl.className = `result-level level-${level}`;
+
+  document.getElementById('resultHeadline').textContent = data.headline || '';
+  document.getElementById('resultSummary').textContent = data.summary || '';
+
+  document.getElementById('resultStrengths').innerHTML = (data.strengths || []).map(s => `<li>${s}</li>`).join('');
+  document.getElementById('resultGaps').innerHTML = (data.gaps || []).map(g => `<li>${g}</li>`).join('');
+
+  document.getElementById('resultRecProduct').textContent = data.topProduct || '';
+  document.getElementById('resultRecReason').textContent = data.productReason || '';
+  document.getElementById('resultNextStep').textContent = data.nextStep || '';
+
+  // Dial color
+  const fill = document.getElementById('dialFill');
+  fill.className = 'dial-fill';
+  if (score <= 20) fill.classList.add('score-fragmented');
+  else if (score <= 40) fill.classList.add('score-emerging');
+  else if (score <= 60) fill.classList.add('score-structured');
+  else if (score <= 80) fill.classList.add('score-advanced');
+  else fill.classList.add('score-intelligent');
+
+  showScreen('screenResult');
+
+  // Animate dial
+  const circumference = 2 * Math.PI * 60;
+  fill.style.strokeDasharray = circumference;
+  fill.style.strokeDashoffset = circumference;
+  const numEl = document.getElementById('dialNum');
+  let current = 0;
+  const interval = setInterval(() => {
+    current = Math.min(current + 1, score);
+    numEl.textContent = current;
+    fill.style.strokeDashoffset = circumference - (current / 100) * circumference;
+    if (current >= score) clearInterval(interval);
+  }, 16);
+}
+
+function retakeAssessment() {
+  step = 0;
+  answers = new Array(5).fill(null);
+  showScreen('screenWelcome');
+}
+</script>
+</body>
+</html>

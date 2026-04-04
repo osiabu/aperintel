@@ -1270,10 +1270,78 @@
   .chat-send:hover { opacity: 0.82; }
   .chat-send:disabled { opacity: 0.35; cursor: not-allowed; }
 
+  /* ── INTELLIGENCE TOOLS CARDS ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 52px;
+  }
+  .tool-card {
+    display: block;
+    text-decoration: none;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 32px 32px;
+    transition: border-color 0.25s, background 0.25s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-border), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tool-card:hover {
+    border-color: var(--accent-border);
+    background: var(--bg-3);
+    transform: translateY(-3px);
+  }
+  .tool-card:hover::before { opacity: 1; }
+  .tool-card-top {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .tool-num {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .tool-badge {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--grey-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 10px;
+    background: var(--bg-3);
+  }
+  .tool-card-title {
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -0.015em; line-height: 1.2;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .tool-card-desc {
+    font-size: 14px; font-weight: 300;
+    color: var(--grey-1); line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .tool-card-cta {
+    font-size: 13px; font-weight: 500;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 6px;
+    transition: gap 0.2s;
+  }
+  .tool-card:hover .tool-card-cta { gap: 10px; }
+
   @media (max-width: 720px) {
-    .score-container { grid-template-columns: 1fr; }
-    .brief-inner { grid-template-columns: 1fr; gap: 28px; }
-    .score-breakdown-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr; gap: 14px; }
     .chat-panel { width: calc(100vw - 28px); right: 14px; bottom: 82px; }
     .chat-trigger { right: 14px; bottom: 16px; }
   }
@@ -1368,200 +1436,32 @@
 
   <hr class="divider">
 
-  <!-- Intelligence Score Assessment -->
-  <div class="score-section">
-    <div class="section-inner">
-      <span class="label reveal">Intelligence Maturity</span>
-      <h2 class="section-title reveal d1">How intelligent is your organisation?</h2>
-      <p class="body-text reveal d2">Five questions. Two minutes. A precise score — and a clear path forward. This is what Aperintel's intelligence layer does, live.</p>
-
-      <div class="score-container">
-        <!-- Form Panel -->
-        <div class="score-form-panel reveal d1" id="scoreFormPanel">
-          <div class="score-steps-bar" id="scoreStepsBar">
-            <div class="score-step-dot active"></div>
-            <div class="score-step-dot"></div>
-            <div class="score-step-dot"></div>
-            <div class="score-step-dot"></div>
-            <div class="score-step-dot"></div>
-          </div>
-          <div class="score-question-wrap" id="scoreQuestionWrap">
-            <!-- Injected by JS -->
-          </div>
-          <div class="score-nav">
-            <button class="score-nav-back" id="scoreBack" onclick="scoreNav(-1)">← Back</button>
-            <span class="score-counter" id="scoreCounter">1 of 5</span>
-            <button class="score-nav-next" id="scoreNext" onclick="scoreNav(1)" disabled>Next →</button>
-          </div>
-        </div>
-
-        <!-- Result Panel -->
-        <div class="score-result-panel reveal d2">
-          <div class="score-idle" id="scoreIdle">
-            <div class="score-idle-line" style="width:82%"></div>
-            <div class="score-idle-line" style="width:58%"></div>
-            <div class="score-idle-line" style="width:91%"></div>
-            <div class="score-idle-line" style="width:46%"></div>
-            <div class="score-idle-line" style="width:74%"></div>
-            <p class="score-idle-hint">Complete the assessment to receive your Intelligence Maturity Score — a precise measure of how structured, automated, and forward-looking your organisation's intelligence actually is.</p>
-          </div>
-
-          <div class="score-calculating" id="scoreCalculating">
-            <div class="score-calc-ring"></div>
-            <p class="score-calc-text">Analysing your intelligence profile...</p>
-          </div>
-
-          <div class="score-result" id="scoreResultPanel">
-            <div class="score-dial-wrap">
-              <div class="score-dial">
-                <svg viewBox="0 0 100 100">
-                  <circle class="score-dial-track" cx="50" cy="50" r="45"/>
-                  <circle class="score-dial-fill" id="scoreDialFill" cx="50" cy="50" r="45"/>
-                </svg>
-                <div class="score-dial-number" id="scoreDialNum">0</div>
-              </div>
-              <div class="score-dial-info">
-                <span class="score-level-badge" id="scoreLevelBadge">—</span>
-                <p class="score-headline" id="scoreHeadline"></p>
-                <p class="score-summary-text" id="scoreSummary"></p>
-              </div>
-            </div>
-
-            <div class="score-breakdown-grid">
-              <div class="score-breakdown-card strengths">
-                <h4>Strengths</h4>
-                <ul id="scoreStrengths"></ul>
-              </div>
-              <div class="score-breakdown-card gaps">
-                <h4>Intelligence Gaps</h4>
-                <ul id="scoreGaps"></ul>
-              </div>
-            </div>
-
-            <div class="score-recommendation">
-              <span class="score-rec-label">Recommended System</span>
-              <span class="score-rec-product" id="scoreRecProduct"></span>
-              <span class="score-rec-reason" id="scoreRecReason"></span>
-            </div>
-
-            <div class="score-next-step" id="scoreNextStep"></div>
-
-            <button class="score-reset-btn" onclick="resetScore()">Retake assessment</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <!-- Ecosystem -->
+  <!-- Intelligence Tools -->
   <div class="section">
     <div class="section-inner">
-      <div class="ecosystem-grid">
-        <div class="ecosystem-text">
-          <span class="label reveal">Platform Vision</span>
-          <h2 class="section-title reveal d1">A unified intelligence ecosystem.</h2>
-          <p class="body-text reveal d2">Each product functions independently. Together, they form infrastructure, not an app portfolio.</p>
-          <p class="body-text reveal d3" style="margin-top: 12px;">This is how intelligence compounds over time.</p>
-        </div>
-        <div class="ecosystem-schema reveal d2">
-          <div class="schema-row">
-            <div class="schema-dot" style="opacity:1"></div>
-            <span class="schema-label">Foundation</span>
-            <span class="schema-desc">AI orchestration</span>
-          </div>
-          <div class="schema-row">
-            <div class="schema-dot" style="opacity:0.75"></div>
-            <span class="schema-label">Execution</span>
-            <span class="schema-desc">Delivery systems</span>
-          </div>
-          <div class="schema-row">
-            <div class="schema-dot" style="opacity:0.55"></div>
-            <span class="schema-label">Intelligence</span>
-            <span class="schema-desc">Finance · Personal</span>
-          </div>
-          <div class="schema-row">
-            <div class="schema-dot" style="opacity:0.35"></div>
-            <span class="schema-label">Community</span>
-            <span class="schema-desc">Ecosystem platforms</span>
-          </div>
-          <div class="schema-row">
-            <div class="schema-dot" style="opacity:0.2"></div>
-            <span class="schema-label">Impact</span>
-            <span class="schema-desc">Research initiatives</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <span class="label reveal">Experience the Intelligence Layer</span>
+      <h2 class="section-title reveal d1">Two tools. Built live.</h2>
+      <p class="body-text reveal d2">These aren't demos — they're the same intelligence we build into every system, running in real time for your specific context.</p>
 
-  <!-- Intelligence Brief Generator -->
-  <div class="brief-section">
-    <div class="section-inner">
-      <span class="label reveal">Live Demo</span>
-      <h2 class="section-title reveal d1">See intelligence structured in real time.</h2>
-      <p class="body-text reveal d2">Describe your organisation. Claude generates a live intelligence brief — the same thinking that powers every Aperintel system.</p>
-
-      <div class="brief-inner">
-        <div class="brief-form-card reveal d1">
-          <h3>Intelligence Brief Generator</h3>
-          <p class="brief-desc">Enter your context. Get a tailored strategic brief in seconds — powered by the same intelligence layer we build into our systems.</p>
-
-          <div class="form-group">
-            <label for="briefSector">Sector</label>
-            <select id="briefSector">
-              <option value="">Select your sector...</option>
-              <option>Financial Services</option>
-              <option>Technology</option>
-              <option>Healthcare</option>
-              <option>Professional Services</option>
-              <option>Education</option>
-              <option>Retail &amp; Commerce</option>
-              <option>Government &amp; Public Sector</option>
-              <option>Community &amp; Non-profit</option>
-              <option>Media &amp; Entertainment</option>
-              <option>Other</option>
-            </select>
+      <div class="tools-grid">
+        <a href="intelligence-score.html" class="tool-card reveal d1">
+          <div class="tool-card-top">
+            <span class="tool-num">01</span>
+            <span class="tool-badge">5 Questions · 2 Minutes</span>
           </div>
-
-          <div class="form-group">
-            <label for="briefChallenge">Primary Challenge</label>
-            <textarea id="briefChallenge" placeholder="Describe the main intelligence or decision-making challenge your organisation faces..." style="min-height:96px;"></textarea>
+          <h3 class="tool-card-title">Intelligence Maturity Score</h3>
+          <p class="tool-card-desc">How structured, automated, and forward-looking is your organisation? Get a precise 0–100 score with strengths, intelligence gaps, and a recommended first move — generated by Claude in real time.</p>
+          <div class="tool-card-cta">Take the assessment →</div>
+        </a>
+        <a href="intelligence-brief.html" class="tool-card reveal d2">
+          <div class="tool-card-top">
+            <span class="tool-num">02</span>
+            <span class="tool-badge">Live Generation</span>
           </div>
-
-          <div class="form-group">
-            <label for="briefScale">Organisation Scale</label>
-            <select id="briefScale">
-              <option value="">Select scale...</option>
-              <option>Individual / Solo</option>
-              <option>Small (2–25 people)</option>
-              <option>Mid-size (26–250 people)</option>
-              <option>Large (250+ people)</option>
-              <option>Enterprise (1000+ people)</option>
-            </select>
-          </div>
-
-          <div class="brief-generating-wrap" id="briefGenerating">
-            <div class="brief-gen-dots"><span></span><span></span><span></span></div>
-            <span>Generating your intelligence brief...</span>
-          </div>
-
-          <button class="btn-primary" id="briefBtn" onclick="generateBrief()" style="margin-top:8px;width:100%;display:block;text-align:center;box-sizing:border-box;">
-            Generate Intelligence Brief
-          </button>
-        </div>
-
-        <div class="brief-output" id="briefOutput">
-          <div class="brief-idle" id="briefIdle">
-            <div class="brief-idle-line" style="width:78%"></div>
-            <div class="brief-idle-line" style="width:55%"></div>
-            <div class="brief-idle-line" style="width:88%"></div>
-            <div class="brief-idle-line" style="width:44%"></div>
-            <div class="brief-idle-line" style="width:70%"></div>
-            <p class="brief-idle-hint">Your intelligence brief will appear here — Executive Summary, Intelligence Gaps, Quick Wins, Recommended Systems, and Implementation Pathway.</p>
-          </div>
-        </div>
+          <h3 class="tool-card-title">Intelligence Brief Generator</h3>
+          <p class="tool-card-desc">Describe your sector, challenge, and scale. Claude generates a structured strategic brief — Executive Summary, Intelligence Gaps, Quick Wins, Recommended Systems, and an Implementation Pathway.</p>
+          <div class="tool-card-cta">Generate your brief →</div>
+        </a>
       </div>
     </div>
   </div>
@@ -2045,252 +1945,6 @@
 </div>
 
 <script>
-// ══════════════════════════════════════
-// INTELLIGENCE SCORE ASSESSMENT
-// ══════════════════════════════════════
-const SCORE_QUESTIONS = [
-  {
-    q: "How does your organisation primarily make decisions?",
-    options: [
-      "Mostly gut feel and experience",
-      "Ad hoc data when it's available",
-      "Regular reports and dashboards",
-      "Structured data with clear processes",
-      "AI-assisted, continuous intelligence"
-    ]
-  },
-  {
-    q: "How would you describe your organisation's data situation?",
-    options: [
-      "Data is scattered and hard to access",
-      "We collect data but rarely use it well",
-      "Some teams use data effectively",
-      "Data is organised and mostly accessible",
-      "Unified data infrastructure, real-time access"
-    ]
-  },
-  {
-    q: "How automated are your key workflows?",
-    options: [
-      "Almost everything is manual",
-      "A few things are automated, mostly not",
-      "Core processes are automated",
-      "Most workflows run automatically",
-      "Fully automated with AI oversight"
-    ]
-  },
-  {
-    q: "How does your organisation respond to change?",
-    options: [
-      "We react after things happen",
-      "We notice problems fairly quickly",
-      "We have some early warning systems",
-      "We anticipate most changes",
-      "We predict and prepare continuously"
-    ]
-  },
-  {
-    q: "What best describes your AI and intelligence capability today?",
-    options: [
-      "We don't really use AI",
-      "We use AI tools occasionally",
-      "AI is used in specific areas",
-      "AI is integrated into key processes",
-      "AI is embedded across all systems"
-    ]
-  }
-];
-
-let scoreStep = 0;
-let scoreAnswers = new Array(5).fill(null);
-
-function initScoreAssessment() {
-  renderScoreQuestion();
-}
-
-function renderScoreQuestion() {
-  const q = SCORE_QUESTIONS[scoreStep];
-  const wrap = document.getElementById('scoreQuestionWrap');
-  wrap.innerHTML = `
-    <span class="score-q-label">Question ${scoreStep + 1} of 5</span>
-    <p class="score-q-text">${q.q}</p>
-    <div class="score-options">
-      ${q.options.map((opt, i) => `
-        <div class="score-option${scoreAnswers[scoreStep] === i ? ' selected' : ''}" onclick="selectScoreOption(${i})">
-          <div class="score-option-radio">${scoreAnswers[scoreStep] === i ? '' : ''}</div>
-          <span class="score-option-text">${opt}</span>
-        </div>
-      `).join('')}
-    </div>
-  `;
-  updateScoreUI();
-}
-
-function selectScoreOption(idx) {
-  scoreAnswers[scoreStep] = idx;
-  renderScoreQuestion();
-}
-
-function updateScoreUI() {
-  const dots = document.querySelectorAll('#scoreStepsBar .score-step-dot');
-  dots.forEach((d, i) => {
-    d.classList.remove('active', 'done');
-    if (i === scoreStep) d.classList.add('active');
-    else if (i < scoreStep) d.classList.add('done');
-  });
-  document.getElementById('scoreCounter').textContent = `${scoreStep + 1} of 5`;
-  document.getElementById('scoreBack').style.visibility = scoreStep === 0 ? 'hidden' : 'visible';
-  const nextBtn = document.getElementById('scoreNext');
-  const isLast = scoreStep === 4;
-  nextBtn.textContent = isLast ? 'Get My Score →' : 'Next →';
-  nextBtn.disabled = scoreAnswers[scoreStep] === null;
-}
-
-function scoreNav(dir) {
-  if (dir === -1 && scoreStep > 0) {
-    scoreStep--;
-    renderScoreQuestion();
-  } else if (dir === 1) {
-    if (scoreAnswers[scoreStep] === null) return;
-    if (scoreStep < 4) {
-      scoreStep++;
-      renderScoreQuestion();
-    } else {
-      submitScoreAssessment();
-    }
-  }
-}
-
-async function submitScoreAssessment() {
-  document.getElementById('scoreIdle').style.display = 'none';
-  document.getElementById('scoreCalculating').classList.add('active');
-  document.getElementById('scoreResultPanel').classList.remove('active');
-  document.getElementById('scoreFormPanel') && (document.getElementById('scoreFormPanel').style.opacity = '0.5');
-
-  const answers = SCORE_QUESTIONS.map((q, i) => ({
-    question: q.q,
-    answer: q.options[scoreAnswers[i]]
-  }));
-
-  try {
-    const res = await fetch('/api/score', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers })
-    });
-    const data = await res.json();
-    document.getElementById('scoreCalculating').classList.remove('active');
-    renderScoreResult(data);
-  } catch {
-    document.getElementById('scoreCalculating').classList.remove('active');
-    document.getElementById('scoreIdle').style.display = 'flex';
-    document.getElementById('scoreIdle').querySelector('.score-idle-hint').textContent = 'Something went wrong. Please try again.';
-  }
-}
-
-function renderScoreResult(data) {
-  document.getElementById('scoreLevelBadge').textContent = data.level || 'Assessed';
-  document.getElementById('scoreHeadline').textContent = data.headline || '';
-  document.getElementById('scoreSummary').textContent = data.summary || '';
-
-  const strengthsList = document.getElementById('scoreStrengths');
-  strengthsList.innerHTML = (data.strengths || []).map(s => `<li>${s}</li>`).join('');
-
-  const gapsList = document.getElementById('scoreGaps');
-  gapsList.innerHTML = (data.gaps || []).map(g => `<li>${g}</li>`).join('');
-
-  document.getElementById('scoreRecProduct').textContent = data.topProduct || '';
-  document.getElementById('scoreRecReason').textContent = data.productReason || '';
-  document.getElementById('scoreNextStep').textContent = data.nextStep || '';
-
-  document.getElementById('scoreResultPanel').classList.add('active');
-
-  // Animate the dial
-  const score = Math.min(100, Math.max(0, data.score || 0));
-  const circumference = 2 * Math.PI * 45;
-  const fill = document.getElementById('scoreDialFill');
-  fill.style.strokeDasharray = circumference;
-  fill.style.strokeDashoffset = circumference;
-
-  let current = 0;
-  const numEl = document.getElementById('scoreDialNum');
-  const interval = setInterval(() => {
-    current = Math.min(current + 1, score);
-    numEl.textContent = current;
-    fill.style.strokeDashoffset = circumference - (current / 100) * circumference;
-    if (current >= score) clearInterval(interval);
-  }, 18);
-}
-
-function resetScore() {
-  scoreStep = 0;
-  scoreAnswers = new Array(5).fill(null);
-  document.getElementById('scoreIdle').style.display = 'flex';
-  document.getElementById('scoreResultPanel').classList.remove('active');
-  document.getElementById('scoreCalculating').classList.remove('active');
-  renderScoreQuestion();
-}
-
-// ══════════════════════════════════════
-// INTELLIGENCE BRIEF GENERATOR
-// ══════════════════════════════════════
-async function generateBrief() {
-  const sector = document.getElementById('briefSector').value;
-  const challenge = document.getElementById('briefChallenge').value.trim();
-  const scale = document.getElementById('briefScale').value;
-
-  if (!sector || !challenge || !scale) {
-    alert('Please fill in all fields to generate your intelligence brief.');
-    return;
-  }
-
-  const btn = document.getElementById('briefBtn');
-  const genWrap = document.getElementById('briefGenerating');
-  const output = document.getElementById('briefOutput');
-  const idle = document.getElementById('briefIdle');
-
-  btn.disabled = true;
-  btn.textContent = 'Generating...';
-  genWrap.classList.add('active');
-  if (idle) idle.style.display = 'none';
-  output.querySelectorAll('.brief-card').forEach(c => c.remove());
-
-  try {
-    const res = await fetch('/api/brief', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sector, challenge, scale })
-    });
-    const brief = await res.json();
-    genWrap.classList.remove('active');
-    renderBrief(brief, output);
-  } catch {
-    genWrap.classList.remove('active');
-    if (idle) { idle.style.display = 'flex'; idle.querySelector('.brief-idle-hint').textContent = 'Something went wrong. Please try again.'; }
-  }
-
-  btn.disabled = false;
-  btn.textContent = 'Generate Intelligence Brief';
-}
-
-function renderBrief(brief, container) {
-  const sections = [
-    { label: 'Executive Summary', html: `<p>${brief.summary || ''}</p>` },
-    { label: 'Intelligence Gaps', html: `<ul class="brief-gap-list">${(brief.gaps||[]).map(g=>`<li><strong>${g.title}</strong> — ${g.description}</li>`).join('')}</ul>` },
-    { label: 'Quick Wins', html: `<ul class="brief-win-list">${(brief.quickWins||[]).map(w=>`<li>${w}</li>`).join('')}</ul>` },
-    { label: 'Recommended Systems', html: `<div class="brief-rec-list">${(brief.recommendations||[]).map(r=>`<div class="brief-rec-item"><span class="brief-rec-product">${r.product}</span><span class="brief-rec-reason">${r.reason}</span></div>`).join('')}</div>` },
-    { label: 'Implementation Pathway', html: `<p>${brief.pathway || ''}</p>` }
-  ];
-
-  sections.forEach((s, i) => {
-    const el = document.createElement('div');
-    el.className = 'brief-card';
-    el.innerHTML = `<span class="brief-card-label">${s.label}</span>${s.html}`;
-    container.appendChild(el);
-    setTimeout(() => el.classList.add('visible'), i * 130);
-  });
-}
-
 // ══════════════════════════════════════
 // AI CHAT WIDGET
 // ══════════════════════════════════════
