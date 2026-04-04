@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZUlEQVR4nO2V30uTYRTHv+d5t7bZNhcyZ1JKiEGLIsjIi8AF3ji8CtxFEOSFBF1Kl8Hr+x9Y0IV06d0gCPoBQqQ3/RBJsh+aMRB0E20u3dz7br573+d0YUJB2JakBe8HHnh4znnO+XJ4znkABweHPcDMgpmVg0pOv9rvV3IFAHLr6wOFgn4TAJLJfaoEMxMz0+Lioq9QNNKmWVnJZDJ1O+e1xhO1XpiYmFCIiItGpX9tbWNECL4bCIWuExEDqLkKNQuIxWKSmZW5zwtdS8vLT9bW85PSRg8zCID8qwL6+voUIpLXbtzq+DA7V4yebL/zevJt71J6pZBKLcWISCaTyZqqUJOAaDTKAJBbXe2KNIYb88XNZ5c6O15sFPJjC+lMby2x/kQAaZomW1u7vE1HI+Fjzc2K1+Pt3ixtqSurX29PTk33DA/fjyQSCVtV1arjVu2oqioBwKmzkXOh+vqwYRiPHjx9fuXE8aYzb6Zn4qlU6tPUzEw/AMzOnq66G6p1JGZGYnDQSzn9gofdH0dH7+WA7WlIRBIAElcHukPtzS9HhoZK37vi36eqCoyPj7uy2azb7w83WJYliMj2h/2kmOZWIBCo6LpuM/MRKaUCwNJ1PR+Pxwt7FqCqqtA0TT58PHaRgfMkqXTI5/ba0jL8vsNBl0sYdR5fVkrZxgq/F0Qewyi3CeFKVch+d7mzM/07Aa7djJqmSQDgijFflDKTt+2NFnjlpomWEttfFJ1cQpTMhgblVTAYNCzLYsMsz/uEsM1y2Q1sj+7/5j3sxs5HQwBIVVWx8/n8uMD8k+2gRTs4ODhUxTczXzQiMJfYTgAAAABJRU5ErkJggg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Start a Project | Aperintel</title>
 <meta name="description" content="Describe what you need built. Aperintel scopes, structures, and prepares a project brief for your review.">
@@ -513,6 +514,28 @@
     .contact-grid { grid-template-columns: 1fr; }
     .phase-action-row { flex-direction: column; align-items: flex-start; }
   }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .nav-logo-img { max-width: 120px; }
+    .phase-bar { overflow-x: auto; }
+    .phase-step { padding: 8px 10px; font-size: 11px; gap: 5px; }
+    .phase { padding: 40px 16px 60px; }
+    .input-card { padding: 24px 16px; }
+    .phase-title { font-size: clamp(22px, 6vw, 30px); }
+    .phase-sub { font-size: 13px; }
+    .phase-hint { font-size: 11px; }
+    .form-group input, .form-group select, .form-group textarea { min-height: 44px; padding: 11px 12px; font-size: 14px; }
+    .context-fields { gap: 8px; }
+    .btn-primary, .btn-approve, .btn-ghost-sm { padding: 13px 20px; width: 100%; text-align: center; justify-content: center; }
+    .phase-action-row { flex-direction: column; gap: 10px; }
+    .brief-section { padding: 16px; }
+    .brief-item { padding: 14px; gap: 10px; }
+    .brief-item-num { width: 28px; height: 28px; font-size: 11px; flex-shrink: 0; }
+    #phaseConfirm { padding: 60px 16px; }
+    .confirm-ref { font-size: clamp(18px, 5vw, 24px); }
+    footer { padding: 24px 16px; }
+  }
 </style>
 </head>
 <body>
@@ -813,13 +836,48 @@ async function generateSolution() {
     });
 
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Generation failed.');
+      // Non-streaming error (e.g. 400 validation)
+      const text = await res.text();
+      let msg = 'Generation failed. Please try again.';
+      try { msg = JSON.parse(text).error || msg; } catch {}
+      throw new Error(msg);
     }
 
-    currentSolution = await res.json();
-    renderBrief(currentSolution);
-    setPhase(3);
+    // Consume the SSE stream, accumulating chunks until { done: true, solution }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('
+');
+      buffer = lines.pop(); // keep any incomplete line
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const payload = line.slice(6).trim();
+        if (!payload) continue;
+
+        let msg;
+        try { msg = JSON.parse(payload); } catch { continue; }
+
+        if (msg.error) throw new Error(msg.error);
+
+        if (msg.done && msg.solution) {
+          currentSolution = msg.solution;
+          renderBrief(currentSolution);
+          setPhase(3);
+          return;
+        }
+        // msg.chunk — streaming token, no action needed (progress is shown by the phase animation)
+      }
+    }
+
+    throw new Error('No solution received. Please try again.');
 
   } catch (err) {
     setPhase(1);

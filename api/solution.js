@@ -71,21 +71,56 @@ Include 6 to 10 brief items. Each must be specific, numbered, and actionable. Av
 
 CRITICAL FORMATTING RULE: Do not use hyphens, em dashes or en dashes anywhere in the response values. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences.`;
 
+  // Stream the response so Vercel never times out waiting for a silent long-running function.
+  // The client accumulates all SSE chunks, then parses the complete JSON at the end.
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+
   try {
-    const message = await client.messages.create({
+    const stream = await client.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content: prompt }],
+      stream: true
     });
 
-    const text = message.content[0].text.trim();
-    const jsonStart = text.indexOf('{');
-    const jsonEnd = text.lastIndexOf('}') + 1;
-    const solution = JSON.parse(text.slice(jsonStart, jsonEnd));
+    let accumulated = '';
 
-    res.json(solution);
+    for await (const event of stream) {
+      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+        accumulated += event.delta.text;
+        // Send a heartbeat so the connection stays alive and the client knows we're working
+        res.write(`data: ${JSON.stringify({ chunk: event.delta.text })}\n\n`);
+      }
+    }
+
+    // Extract and validate JSON from the accumulated text
+    const jsonStart = accumulated.indexOf('{');
+    const jsonEnd = accumulated.lastIndexOf('}') + 1;
+
+    if (jsonStart === -1 || jsonEnd <= jsonStart) {
+      res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
+      return res.end();
+    }
+
+    let solution;
+    try {
+      solution = JSON.parse(accumulated.slice(jsonStart, jsonEnd));
+    } catch (parseErr) {
+      console.error('JSON parse error:', parseErr.message);
+      res.write(`data: ${JSON.stringify({ error: 'Failed to parse solution brief. Please try again.' })}\n\n`);
+      return res.end();
+    }
+
+    res.write(`data: ${JSON.stringify({ done: true, solution })}\n\n`);
+    res.end();
+
   } catch (err) {
     console.error('Solution error:', err);
-    res.status(500).json({ error: 'Failed to generate solution brief. Please try again.' });
+    res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
+    res.end();
   }
 };

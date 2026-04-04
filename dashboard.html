@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZUlEQVR4nO2V30uTYRTHv+d5t7bZNhcyZ1JKiEGLIsjIi8AF3ji8CtxFEOSFBF1Kl8Hr+x9Y0IV06d0gCPoBQqQ3/RBJsh+aMRB0E20u3dz7br573+d0YUJB2JakBe8HHnh4znnO+XJ4znkABweHPcDMgpmVg0pOv9rvV3IFAHLr6wOFgn4TAJLJfaoEMxMz0+Lioq9QNNKmWVnJZDJ1O+e1xhO1XpiYmFCIiItGpX9tbWNECL4bCIWuExEDqLkKNQuIxWKSmZW5zwtdS8vLT9bW85PSRg8zCID8qwL6+voUIpLXbtzq+DA7V4yebL/zevJt71J6pZBKLcWISCaTyZqqUJOAaDTKAJBbXe2KNIYb88XNZ5c6O15sFPJjC+lMby2x/kQAaZomW1u7vE1HI+Fjzc2K1+Pt3ixtqSurX29PTk33DA/fjyQSCVtV1arjVu2oqioBwKmzkXOh+vqwYRiPHjx9fuXE8aYzb6Zn4qlU6tPUzEw/AMzOnq66G6p1JGZGYnDQSzn9gofdH0dH7+WA7WlIRBIAElcHukPtzS9HhoZK37vi36eqCoyPj7uy2azb7w83WJYliMj2h/2kmOZWIBCo6LpuM/MRKaUCwNJ1PR+Pxwt7FqCqqtA0TT58PHaRgfMkqXTI5/ba0jL8vsNBl0sYdR5fVkrZxgq/F0Qewyi3CeFKVch+d7mzM/07Aa7djJqmSQDgijFflDKTt+2NFnjlpomWEttfFJ1cQpTMhgblVTAYNCzLYsMsz/uEsM1y2Q1sj+7/5j3sxs5HQwBIVVWx8/n8uMD8k+2gRTs4ODhUxTczXzQiMJfYTgAAAABJRU5ErkJggg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project Requests | Aperintel Internal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -335,6 +336,24 @@
     .body-grid { grid-template-columns: 1fr; }
     .brief-card-header { flex-direction: column; align-items: flex-start; }
     .brief-card-right { flex-direction: row; align-items: center; }
+  }
+
+  @media (max-width: 480px) {
+    .dash-nav { padding: 0 16px; }
+    .dash-nav-title { font-size: 13px; }
+    .gate-card { padding: 28px 20px; max-width: 100%; margin: 0 16px; }
+    .gate-input { min-height: 44px; padding: 12px 14px; font-size: 15px; }
+    .gate-btn { min-height: 44px; }
+    .dash-main { padding: 20px 16px; }
+    .dash-stats { flex-wrap: wrap; }
+    .dash-stat { flex: 1 1 45%; padding: 12px 14px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .dash-filter { gap: 6px; flex-wrap: wrap; }
+    .filter-btn { min-height: 40px; padding: 7px 12px; font-size: 11.5px; }
+    .brief-card { padding: 16px; }
+    .brief-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .brief-card-meta { flex-wrap: wrap; gap: 6px; }
+    .status-btn { min-height: 38px; padding: 7px 10px; font-size: 11px; }
+    .status-row { flex-wrap: wrap; gap: 6px; }
   }
 </style>
 </head>

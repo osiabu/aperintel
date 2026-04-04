@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZUlEQVR4nO2V30uTYRTHv+d5t7bZNhcyZ1JKiEGLIsjIi8AF3ji8CtxFEOSFBF1Kl8Hr+x9Y0IV06d0gCPoBQqQ3/RBJsh+aMRB0E20u3dz7br573+d0YUJB2JakBe8HHnh4znnO+XJ4znkABweHPcDMgpmVg0pOv9rvV3IFAHLr6wOFgn4TAJLJfaoEMxMz0+Lioq9QNNKmWVnJZDJ1O+e1xhO1XpiYmFCIiItGpX9tbWNECL4bCIWuExEDqLkKNQuIxWKSmZW5zwtdS8vLT9bW85PSRg8zCID8qwL6+voUIpLXbtzq+DA7V4yebL/zevJt71J6pZBKLcWISCaTyZqqUJOAaDTKAJBbXe2KNIYb88XNZ5c6O15sFPJjC+lMby2x/kQAaZomW1u7vE1HI+Fjzc2K1+Pt3ixtqSurX29PTk33DA/fjyQSCVtV1arjVu2oqioBwKmzkXOh+vqwYRiPHjx9fuXE8aYzb6Zn4qlU6tPUzEw/AMzOnq66G6p1JGZGYnDQSzn9gofdH0dH7+WA7WlIRBIAElcHukPtzS9HhoZK37vi36eqCoyPj7uy2azb7w83WJYliMj2h/2kmOZWIBCo6LpuM/MRKaUCwNJ1PR+Pxwt7FqCqqtA0TT58PHaRgfMkqXTI5/ba0jL8vsNBl0sYdR5fVkrZxgq/F0Qewyi3CeFKVch+d7mzM/07Aa7djJqmSQDgijFflDKTt+2NFnjlpomWEttfFJ1cQpTMhgblVTAYNCzLYsMsz/uEsM1y2Q1sj+7/5j3sxs5HQwBIVVWx8/n8uMD8k+2gRTs4ODhUxTczXzQiMJfYTgAAAABJRU5ErkJggg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Intelligence Brief Generator | Aperintel</title>
 <meta name="description" content="Describe your organisation. Lumen generates a live, structured intelligence brief. The same thinking behind every Aperintel system.">
@@ -376,11 +377,25 @@
   @media (max-width: 900px) {
     .page-wrap { grid-template-columns: 1fr; }
     .form-panel {
-      position: static; height: auto;
+      position: static; height: auto; overflow-y: visible;
       border-right: none; border-bottom: 1px solid var(--border);
+      padding: 32px 28px;
     }
     .output-panel { padding: 32px 24px; }
     .output-idle { height: auto; padding: 20px 0; }
+    nav { padding: 0 24px; }
+    .nav-print { padding: 6px 12px; font-size: 12px; }
+  }
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .form-panel { padding: 24px 16px; }
+    .output-panel { padding: 24px 16px; }
+    .form-label { font-size: 11px; }
+    .form-group input, .form-group textarea, .form-group select { padding: 11px 12px; font-size: 13px; }
+    .btn-primary, .btn-ghost { padding: 13px 20px; width: 100%; text-align: center; }
+    .nav-logo-img { max-width: 120px; }
+    .nav-print { display: none; }
+    footer { padding: 24px 16px; }
   }
 </style>
 </head>

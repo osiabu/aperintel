@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZUlEQVR4nO2V30uTYRTHv+d5t7bZNhcyZ1JKiEGLIsjIi8AF3ji8CtxFEOSFBF1Kl8Hr+x9Y0IV06d0gCPoBQqQ3/RBJsh+aMRB0E20u3dz7br573+d0YUJB2JakBe8HHnh4znnO+XJ4znkABweHPcDMgpmVg0pOv9rvV3IFAHLr6wOFgn4TAJLJfaoEMxMz0+Lioq9QNNKmWVnJZDJ1O+e1xhO1XpiYmFCIiItGpX9tbWNECL4bCIWuExEDqLkKNQuIxWKSmZW5zwtdS8vLT9bW85PSRg8zCID8qwL6+voUIpLXbtzq+DA7V4yebL/zevJt71J6pZBKLcWISCaTyZqqUJOAaDTKAJBbXe2KNIYb88XNZ5c6O15sFPJjC+lMby2x/kQAaZomW1u7vE1HI+Fjzc2K1+Pt3ixtqSurX29PTk33DA/fjyQSCVtV1arjVu2oqioBwKmzkXOh+vqwYRiPHjx9fuXE8aYzb6Zn4qlU6tPUzEw/AMzOnq66G6p1JGZGYnDQSzn9gofdH0dH7+WA7WlIRBIAElcHukPtzS9HhoZK37vi36eqCoyPj7uy2azb7w83WJYliMj2h/2kmOZWIBCo6LpuM/MRKaUCwNJ1PR+Pxwt7FqCqqtA0TT58PHaRgfMkqXTI5/ba0jL8vsNBl0sYdR5fVkrZxgq/F0Qewyi3CeFKVch+d7mzM/07Aa7djJqmSQDgijFflDKTt+2NFnjlpomWEttfFJ1cQpTMhgblVTAYNCzLYsMsz/uEsM1y2Q1sj+7/5j3sxs5HQwBIVVWx8/n8uMD8k+2gRTs4ODhUxTczXzQiMJfYTgAAAABJRU5ErkJggg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Terms of Service | Aperintel</title>
 <meta name="description" content="The terms and conditions governing use of the Aperintel website and its AI-powered tools.">
@@ -49,6 +50,25 @@
   .footer-links { display: flex; gap: 20px; }
   .footer-links a { font-size: 11px; color: var(--grey-2); text-decoration: none; transition: color 0.2s; }
   .footer-links a:hover { color: var(--grey-1); }
+
+  @media (max-width: 960px) {
+    nav { padding: 0 24px; }
+    footer { padding: 20px 24px; }
+    main { padding: calc(var(--nav-h) + 40px) 20px 60px; }
+  }
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .nav-logo-img { max-width: 120px; }
+    footer { padding: 20px 16px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .footer-links { flex-wrap: wrap; gap: 14px; }
+    main { padding: calc(var(--nav-h) + 28px) 16px 40px; }
+    h1 { font-size: clamp(22px, 6vw, 32px); }
+    h2 { font-size: 14px; }
+    p, ul li { font-size: 13px; line-height: 1.75; }
+    .legal-contact { padding: 16px; }
+    .legal-meta { font-size: 11px; margin-bottom: 32px; }
+  }
 </style>
 </head>
 <body>
@@ -68,7 +88,7 @@
 <p>By accessing or using the Aperintel website (aperintel.com) and its tools ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service. These terms apply to all visitors, users, and others who access or use the Service.</p>
 
 <h2>2. About Aperintel</h2>
-<p>Aperintel Ltd is an intelligence infrastructure company. We build AI-native systems for organisations, communities, and individuals. Our website provides information about our products and services, as well as interactive tools powered by AI technology.</p>
+<p>Aperintel is an intelligence infrastructure company. We build AI-native systems for organisations, communities, and individuals. Our website provides information about our products and services, as well as interactive tools powered by AI technology.</p>
 
 <h2>3. Use of the Service</h2>
 <p>You agree to use the Service only for lawful purposes and in a manner that does not infringe the rights of others. You must not:</p>
@@ -90,14 +110,14 @@
 <p>When you submit a project brief via our Start a Project tool, you are initiating an enquiry with Aperintel. Submission of a brief does not constitute a contract, commitment, or guarantee of services. Aperintel will review submitted briefs and respond at its discretion. All submitted information is handled in accordance with our <a href="privacy-policy.html">Privacy Policy</a>.</p>
 
 <h2>6. Intellectual Property</h2>
-<p>All content on the Aperintel website, including text, graphics, logos, product names, and software, is owned by or licensed to Aperintel Ltd and is protected by applicable intellectual property law. You may not reproduce, distribute, or create derivative works from any content on this site without our express written permission.</p>
+<p>All content on the Aperintel website, including text, graphics, logos, product names, and software, is owned by or licensed to Aperintel and is protected by applicable intellectual property law. You may not reproduce, distribute, or create derivative works from any content on this site without our express written permission.</p>
 <p>AI-generated outputs produced by our tools in response to your inputs may be used by you for your own internal purposes. Aperintel does not claim ownership of content generated in direct response to your specific inputs.</p>
 
 <h2>7. Third-Party Services</h2>
 <p>Our Service uses third-party providers including Anthropic (AI processing) and Vercel (hosting). Your use of these services through our platform is subject to their respective terms and policies. Aperintel is not responsible for the practices or content of third-party services.</p>
 
 <h2>8. Limitation of Liability</h2>
-<p>To the fullest extent permitted by law, Aperintel Ltd shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or in connection with your use of the Service, including but not limited to loss of profits, data, or business opportunities.</p>
+<p>To the fullest extent permitted by law, Aperintel shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or in connection with your use of the Service, including but not limited to loss of profits, data, or business opportunities.</p>
 <p>Aperintel's total liability to you for any claim arising out of or relating to these Terms or the Service shall not exceed the greater of (a) the amount you have paid to Aperintel in the preceding 12 months or (b) one hundred pounds sterling (£100).</p>
 
 <h2>9. Disclaimers</h2>
@@ -113,12 +133,12 @@
 <p>For questions about these Terms, please use the contact form on <a href="index.html">our website</a>.</p>
 
 <div class="legal-contact">
-  <p>Aperintel Ltd. Contact us via the <a href="index.html#contact">Request Access</a> form on our website.</p>
+  <p>Aperintel. Contact us via the <a href="index.html#contact">Request Access</a> form on our website.</p>
 </div>
 </main>
 <footer>
   <div class="footer-bottom">
-    <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+    <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
     <div class="footer-links">
       <a href="privacy-policy.html">Privacy Policy</a>
       <a href="cookie-policy.html">Cookie Policy</a>

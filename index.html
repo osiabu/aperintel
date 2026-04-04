@@ -550,8 +550,8 @@
     gap: 48px; padding-bottom: 40px;
     border-bottom: 1px solid var(--border);
   }
-  .footer-brand { display: flex; flex-direction: column; gap: 12px; }
-  .footer-logo-img { height: 36px; width: auto; filter: brightness(0.85) contrast(1.05); }
+  .footer-brand { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+  .footer-logo-img { height: 36px; width: auto; max-width: 140px; display: block; filter: brightness(0.85) contrast(1.05); }
   .footer-tagline { font-size: 12px; color: var(--grey-2); font-weight: 300; line-height: 1.7; max-width: 220px; }
   .footer-col h4 {
     font-size: 11px; font-weight: 500; letter-spacing: 0.10em;
@@ -623,7 +623,9 @@
     .ecosystem-grid { grid-template-columns: 1fr; gap: 44px; }
     .contact-layout { grid-template-columns: 1fr; gap: 48px; }
     .about-grid { grid-template-columns: 1fr; }
-    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .footer-col h4 { font-size: 10px; }
+    .footer-col a, .footer-col button { font-size: 11.5px; }
     footer { padding: 40px 24px 24px; }
   }
   @media (max-width: 720px) {
@@ -1389,6 +1391,22 @@
     .chat-panel { width: calc(100vw - 28px); right: 14px; bottom: 82px; }
     .chat-trigger { right: 14px; bottom: 16px; }
   }
+
+  @media (max-width: 520px) {
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 24px; }
+  }
+  @media (max-width: 400px) {
+    nav { padding: 0 16px; }
+    .hero { padding: calc(var(--nav-h) + 40px) 16px 60px; }
+    .section-inner, .page-hero, .container, .divider { padding-left: 16px; padding-right: 16px; }
+    footer { padding: 40px 16px 24px; }
+    .footer-top { grid-template-columns: 1fr; gap: 24px; }
+    .mobile-menu { padding: 16px 16px 24px; }
+    .mobile-menu a { padding: 14px 0; font-size: 15px; }
+    .btn-primary, .btn-ghost, .btn-ghost-lg { padding: 14px 20px; }
+    .hamburger { width: 44px; height: 44px; }
+    .tools-grid { grid-template-columns: 1fr !important; }
+  }
 </style>
 </head>
 <body>
@@ -1574,7 +1592,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+        <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
         <a href="dashboard.html" class="footer-staff">Staff Portal</a>
       </div>
     </div>
@@ -1646,7 +1664,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+        <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
         <a href="dashboard.html" class="footer-staff">Staff Portal</a>
       </div>
     </div>
@@ -1758,7 +1776,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+        <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
         <a href="dashboard.html" class="footer-staff">Staff Portal</a>
       </div>
     </div>
@@ -1878,7 +1896,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+        <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
         <a href="dashboard.html" class="footer-staff">Staff Portal</a>
       </div>
     </div>
@@ -1989,7 +2007,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-copy">&copy; 2026 Aperintel Ltd. All rights reserved.</span>
+        <span class="footer-copy">&copy; 2026 Aperintel. All rights reserved.</span>
         <a href="dashboard.html" class="footer-staff">Staff Portal</a>
       </div>
     </div>

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZUlEQVR4nO2V30uTYRTHv+d5t7bZNhcyZ1JKiEGLIsjIi8AF3ji8CtxFEOSFBF1Kl8Hr+x9Y0IV06d0gCPoBQqQ3/RBJsh+aMRB0E20u3dz7br573+d0YUJB2JakBe8HHnh4znnO+XJ4znkABweHPcDMgpmVg0pOv9rvV3IFAHLr6wOFgn4TAJLJfaoEMxMz0+Lioq9QNNKmWVnJZDJ1O+e1xhO1XpiYmFCIiItGpX9tbWNECL4bCIWuExEDqLkKNQuIxWKSmZW5zwtdS8vLT9bW85PSRg8zCID8qwL6+voUIpLXbtzq+DA7V4yebL/zevJt71J6pZBKLcWISCaTyZqqUJOAaDTKAJBbXe2KNIYb88XNZ5c6O15sFPJjC+lMby2x/kQAaZomW1u7vE1HI+Fjzc2K1+Pt3ixtqSurX29PTk33DA/fjyQSCVtV1arjVu2oqioBwKmzkXOh+vqwYRiPHjx9fuXE8aYzb6Zn4qlU6tPUzEw/AMzOnq66G6p1JGZGYnDQSzn9gofdH0dH7+WA7WlIRBIAElcHukPtzS9HhoZK37vi36eqCoyPj7uy2azb7w83WJYliMj2h/2kmOZWIBCo6LpuM/MRKaUCwNJ1PR+Pxwt7FqCqqtA0TT58PHaRgfMkqXTI5/ba0jL8vsNBl0sYdR5fVkrZxgq/F0Qewyi3CeFKVch+d7mzM/07Aa7djJqmSQDgijFflDKTt+2NFnjlpomWEttfFJ1cQpTMhgblVTAYNCzLYsMsz/uEsM1y2Q1sj+7/5j3sxs5HQwBIVVWx8/n8uMD8k+2gRTs4ODhUxTczXzQiMJfYTgAAAABJRU5ErkJggg==">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Intelligence Maturity Score | Aperintel</title>
 <meta name="description" content="Discover your organisation's intelligence maturity. 5 questions. A precise 0–100 score with strengths, gaps, and a clear path forward.">
@@ -481,6 +482,24 @@
     .result-grid { grid-template-columns: 1fr; }
     .q-text { font-size: 22px; }
     .welcome-meta { gap: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .nav-logo-img { max-width: 120px; }
+    #screenWelcome { padding: 60px 16px 60px; }
+    .welcome-title { font-size: clamp(24px, 7vw, 36px); }
+    .welcome-sub { font-size: 13px; }
+    .q-text { font-size: 20px; }
+    .q-options { gap: 8px; }
+    .q-option { padding: 12px 14px; font-size: 13px; min-height: 44px; }
+    .q-option-key { width: 26px; height: 26px; font-size: 10px; }
+    .result-grid { grid-template-columns: 1fr; }
+    .result-hero { flex-direction: column; gap: 16px; }
+    .result-score-num { font-size: clamp(52px, 14vw, 80px); }
+    .screen { padding: 0 0; }
+    #screenResult { padding: 24px 16px 60px; }
+    .btn-ghost-lg { padding: 13px 20px; width: 100%; text-align: center; }
   }
 </style>
 </head>
