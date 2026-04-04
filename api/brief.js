@@ -46,8 +46,8 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
   "pathway": "2-3 sentences describing the recommended implementation approach and what changes first"
 }
 
-Available Aperintel products to recommend from: Enterprise Platform, Avant, Tipintel, Wingman, Aoura, Aces, YoungTekkie, Orion, Titan OS, The Depression Project.
-Only recommend products that genuinely fit their described challenge. Be specific and insightful, not generic.
+Available Aperintel products to recommend from: Enterprise Platform, Avant, Tipintel, Wingman, Aoura, Aces, Tekkiestack, Orion, Titan OS, The Depression Project, Education Systems.
+Only recommend products that genuinely fit their described challenge. Be specific and insightful, not generic. Keep all text values concise: maximum 1 to 2 sentences per field.
 
 FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in your response. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences instead.`;
 

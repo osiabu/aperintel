@@ -37,11 +37,12 @@ APERINTEL PRODUCT ECOSYSTEM (for reference when recommending existing solutions)
 - Tipintel: Financial market intelligence and decision support
 - Aoura: Private AI personal companion on zero-knowledge architecture
 - Aces: Community intelligence and ecosystem management platform
-- YoungTekkie: Modular development framework
+- Tekkiestack: Learning platform for young people who want to code, part of Aperintel's education arm
 - Wingman: AI trade analysis platform (live)
 - Orion: AI orchestration layer for existing operating systems
 - Titan OS: AI-native operating system (concept stage)
 - The Depression Project: Mental health AI research initiative
+- Education Systems: Intelligent education and training platforms, part of Aperintel's growing education arm
 
 INSTRUCTIONS:
 Assess whether this request is best met by existing Aperintel products, a custom build, or a combination. Be honest. If the client needs something bespoke that does not exist in the product lineup, say so clearly and scope it as a custom development engagement.
