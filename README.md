@@ -6,36 +6,40 @@ This repository contains the official Aperintel website, deployed on Vercel with
 
 ## Live Features
 
-- **AI Chat Widget** — Streaming AI assistant (Lumen) with voice input. Knows every Aperintel product and acts as a consultative intelligence advisor.
-- **Intelligence Score Assessment** — 5-question maturity quiz that generates a personalised 0 to 100 intelligence score with strengths, gaps, and product recommendations.
-- **Intelligence Brief Generator** — Enter your sector, challenge, and scale to receive a live, structured intelligence brief (Executive Summary, Gaps, Quick Wins, Recommendations, Pathway).
-- **Start a Project** — Describe what you need built. Lumen scopes a solution, generates a numbered project brief, and submits it to the Aperintel development team on approval.
-- **Staff Dashboard** — Password-protected internal dashboard for the Aperintel team to view, filter, and update the status of all submitted project briefs.
+- **AI Chat Widget (Lumen)** — Streaming AI assistant with voice input. Knows every Aperintel product and acts as a consultative intelligence advisor. Branded as Lumen, Aperintel's intelligence layer.
+- **Intelligence Score Assessment** — 5-question maturity quiz generating a personalised 0 to 100 score with strengths, gaps, and product recommendations. After results, nudges the user to start a project with pre-populated context.
+- **Intelligence Brief Generator** — Enter sector, challenge, and scale to receive a live structured brief (Executive Summary, Gaps, Quick Wins, Recommended Systems, Implementation Pathway). Includes a branded PDF print layout with Aperintel logo. Nudges users to start a project with brief content pre-filled.
+- **Start a Project** — Describe what you need built. Lumen scopes a solution via a streaming API, generates a numbered project brief, and submits it to the Aperintel team on approval. Accepts pre-populated context from the Score and Brief tools. Users can clear pre-filled content and start fresh.
+- **Staff Dashboard** — Password-protected internal dashboard. Staff can view, filter, and update the status of all submitted project briefs, contact clients directly via email, and add internal notes per project (saved to localStorage).
+- **Legal Pages** — Privacy Policy, Cookie Policy, and Terms of Service. UK GDPR aligned. All contact references point to the website form rather than placeholder emails.
 
 ## Structure
 
 ```
 aperintel/
-├── index.html                  — Main site (all pages, styles, scripts)
+├── index.html                  — Main site (all pages, styles, scripts, Lumen chat widget)
 ├── intelligence-score.html     — Intelligence Maturity Score standalone tool
-├── intelligence-brief.html     — Intelligence Brief Generator standalone tool
+├── intelligence-brief.html     — Intelligence Brief Generator with PDF print layout
 ├── solution-brief.html         — Start a Project flow (describe, scope, approve, submit)
 ├── dashboard.html              — Internal staff dashboard (password protected)
+├── privacy-policy.html         — Privacy Policy
+├── cookie-policy.html          — Cookie Policy
+├── terms-of-service.html       — Terms of Service
 ├── api/
-│   ├── chat.js                 — Streaming chat API (Anthropic SDK, SSE)
+│   ├── chat.js                 — Streaming SSE chat API (Lumen assistant)
 │   ├── brief.js                — Intelligence Brief Generator API
 │   ├── score.js                — Intelligence Score Assessment API
-│   ├── solution.js             — Solution scoping and project brief generation API
+│   ├── solution.js             — Streaming SSE solution scoping and project brief API
 │   ├── submit-brief.js         — Submits approved project briefs to Vercel KV
-│   └── briefs.js               — Fetches and updates briefs for the staff dashboard
+│   └── briefs.js               — Fetches and updates project briefs for the staff dashboard
 ├── package.json                — Node.js dependencies
-├── vercel.json                 — Vercel function configuration
+├── vercel.json                 — Vercel function configuration (maxDuration: 60s)
 └── README.md
 ```
 
 ## Pages
 
-- Home (with three live intelligence tools)
+- Home (with three live intelligence tool cards and Lumen chat widget)
 - About
 - Platform
 - Products (10 products: Enterprise Platform, Avant, Tipintel, Aoura, Aces, Tekkiestack, The Depression Project, Wingman, Orion, Titan OS)
@@ -63,6 +67,16 @@ HTML, CSS, Vanilla JavaScript, Node.js (Vercel Serverless Functions), Anthropic 
 
 No frontend framework. No build step.
 
+## Key Technical Notes
+
+- All AI endpoints use `claude-sonnet-4-6` via the Anthropic SDK. Branded as Lumen on the frontend.
+- `api/chat.js` and `api/solution.js` use Server-Sent Events (SSE) streaming to prevent Vercel function timeouts.
+- Project briefs are stored in Vercel KV (Upstash Redis) as both a list (`project-briefs`) and individual keys (`brief:REF`).
+- Pre-population between tools uses `sessionStorage`. Score and Brief tools write context; the Start a Project page reads and formats it on load.
+- Staff notes in the dashboard are persisted to `localStorage` keyed by project reference.
+- The Intelligence Brief PDF uses `@media print` CSS to inject the Aperintel logo, hide UI chrome, and produce a clean branded document.
+- All serverless functions have `maxDuration: 60` in `vercel.json`.
+
 ## Environment Variables
 
 Set the following in your Vercel project settings:
@@ -80,7 +94,7 @@ Set the following in your Vercel project settings:
 
 1. Push this repository to GitHub
 2. Import the project in [Vercel](https://vercel.com)
-3. Enable Vercel KV (Storage tab) and link it to the project
+3. Enable Vercel KV under the Storage tab and link it to the project
 4. Add `ANTHROPIC_API_KEY` and `DASHBOARD_PASSWORD` under Settings, Environment Variables
 5. Deploy. Vercel auto-detects the `/api` directory as serverless functions.
 

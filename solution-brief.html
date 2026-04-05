@@ -536,7 +536,60 @@
     .confirm-ref { font-size: clamp(18px, 5vw, 24px); }
     footer { padding: 24px 16px; }
   }
+
+  .prefill-banner {
+    display: none;
+    background: rgba(91,115,245,0.08);
+    border: 1px solid var(--accent-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .prefill-banner.visible { display: flex; }
+  .prefill-banner-text { font-size: 13px; color: var(--grey-1); }
+  .prefill-banner-text strong { color: var(--white); }
+  .prefill-clear { font-size: 12px; color: var(--grey-2); background: none; border: 1px solid var(--grey-3); border-radius: 6px; padding: 5px 12px; cursor: pointer; font-family: var(--font); transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+  .prefill-clear:hover { color: var(--white); border-color: var(--grey-2); }
 </style>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://aperintel.com/solution-brief.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aperintel.com/solution-brief.html">
+<meta property="og:title" content="Start a Project | Aperintel">
+<meta property="og:description" content="Describe what you need built. Aperintel's intelligence layer scopes your idea, structures a project brief, and connects you with the development team.">
+<meta property="og:site_name" content="Aperintel">
+<meta property="og:image" content="https://aperintel.com/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Start a Project | Aperintel">
+<meta name="twitter:description" content="Describe what you need built. Aperintel's intelligence layer scopes your idea, structures a project brief, and connects you with the development team.">
+<meta name="twitter:image" content="https://aperintel.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Start a Project with Aperintel",
+  "url": "https://aperintel.com/solution-brief.html",
+  "description": "Describe what you need built. Aperintel scopes your idea, generates a structured project brief, and connects you with the development team.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "GBP"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Aperintel",
+    "url": "https://aperintel.com"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -576,6 +629,11 @@
     <span class="phase-label">Start a Project</span>
     <h1 class="phase-title">Tell us what you<br><em>need built.</em></h1>
     <p class="phase-sub">Describe your idea, problem, or vision. Our intelligence layer will scope it, structure it, and prepare a project brief for your review, whether it fits our existing systems or requires something completely bespoke.</p>
+
+    <div class="prefill-banner" id="prefillBanner">
+      <span class="prefill-banner-text"><strong>Pre-filled</strong> from your <span id="prefillSource">Aperintel tool</span></span>
+      <button class="prefill-clear" onclick="clearPrefill()">Clear and start fresh</button>
+    </div>
 
     <div class="input-card">
       <div class="input-card-title">
@@ -774,6 +832,56 @@
 </div>
 
 <script>
+
+// ── PRE-FILL FROM INTELLIGENCE TOOLS ──────────────────
+(function() {
+  const raw = sessionStorage.getItem('aperintel_prefill');
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    let text = '';
+    const sourceLabels = {
+      'intelligence-brief': 'Intelligence Brief Generator',
+      'intelligence-score': 'Intelligence Score Assessment'
+    };
+    const sourceLabel = sourceLabels[data.source] || 'Aperintel tool';
+
+    if (data.source === 'intelligence-brief') {
+      text = 'Context from Intelligence Brief (' + (data.sector || '') + ' sector, ' + (data.scale || '') + '):\n\n';
+      if (data.summary) text += 'Summary: ' + data.summary + '\n\n';
+      if (data.gaps) text += 'Key Intelligence Gaps: ' + data.gaps + '\n\n';
+      if (data.recommendations) text += 'Recommended Systems: ' + data.recommendations + '\n\n';
+      if (data.pathway) text += 'Suggested Pathway: ' + data.pathway;
+    } else if (data.source === 'intelligence-score') {
+      text = 'Context from Intelligence Score Assessment (' + (data.level || '') + '):\n\n';
+      if (data.headline) text += 'Assessment: ' + data.headline + '\n\n';
+      if (data.gaps) text += 'Intelligence Gaps to Address: ' + data.gaps + '\n\n';
+      if (data.strengths) text += 'Current Strengths: ' + data.strengths + '\n\n';
+      if (data.recommendation) text += 'Recommended Solution: ' + data.recommendation;
+      if (data.reason) text += ' — ' + data.reason;
+    }
+
+    if (text.trim()) {
+      window.addEventListener('DOMContentLoaded', function() {
+        const ta = document.getElementById('descriptionInput');
+        const banner = document.getElementById('prefillBanner');
+        const src = document.getElementById('prefillSource');
+        if (ta) { ta.value = text.trim(); updateCharCount(ta); }
+        if (banner) banner.classList.add('visible');
+        if (src) src.textContent = sourceLabel;
+      });
+    }
+  } catch(e) {}
+})();
+
+function clearPrefill() {
+  sessionStorage.removeItem('aperintel_prefill');
+  const ta = document.getElementById('descriptionInput');
+  const banner = document.getElementById('prefillBanner');
+  if (ta) { ta.value = ''; updateCharCount(ta); }
+  if (banner) banner.classList.remove('visible');
+}
+
 let currentSolution = null;
 
 function updateCharCount(el) {

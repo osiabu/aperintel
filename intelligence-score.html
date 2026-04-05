@@ -501,7 +501,72 @@
     #screenResult { padding: 24px 16px 60px; }
     .btn-ghost-lg { padding: 13px 20px; width: 100%; text-align: center; }
   }
+
+  .result-nudge {
+    background: linear-gradient(135deg, rgba(91,115,245,0.10) 0%, rgba(91,115,245,0.04) 100%);
+    border: 1px solid var(--accent-border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin: 32px 0 8px;
+  }
+  .nudge-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .nudge-text { flex: 1; min-width: 200px; }
+  .nudge-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 6px; }
+  .nudge-body { font-size: 13.5px; color: var(--grey-1); line-height: 1.65; margin: 0; }
+  .btn-nudge {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--accent); color: white;
+    border: none; border-radius: 8px;
+    padding: 14px 24px; font-size: 14px; font-weight: 500;
+    font-family: var(--font); cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-nudge:hover { opacity: 0.87; transform: translateY(-1px); }
+  @media (max-width: 480px) {
+    .result-nudge { padding: 20px 18px; }
+    .nudge-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .btn-nudge { width: 100%; justify-content: center; }
+  }
 </style>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://aperintel.com/intelligence-score.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://aperintel.com/intelligence-score.html">
+<meta property="og:title" content="Intelligence Maturity Score | Aperintel">
+<meta property="og:description" content="Discover your organisation's intelligence maturity. 5 questions. A precise 0 to 100 score with real strengths, real gaps, and a clear path forward.">
+<meta property="og:site_name" content="Aperintel">
+<meta property="og:image" content="https://aperintel.com/og-image.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Intelligence Maturity Score | Aperintel">
+<meta name="twitter:description" content="Discover your organisation's intelligence maturity. 5 questions. A precise 0 to 100 score with real strengths, real gaps, and a clear path forward.">
+<meta name="twitter:image" content="https://aperintel.com/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Intelligence Maturity Score",
+  "url": "https://aperintel.com/intelligence-score.html",
+  "description": "A 5-question assessment tool that generates a precise 0 to 100 intelligence maturity score with strengths, gaps, and product recommendations for your organisation.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "GBP"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Aperintel",
+    "url": "https://aperintel.com"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -603,6 +668,20 @@
 
     <div class="result-nextstep" id="resultNextStep"></div>
 
+    <div class="result-nudge" id="resultNudge">
+      <div class="nudge-inner">
+        <div class="nudge-text">
+          <span class="nudge-label">Ready to act on this?</span>
+          <p class="nudge-body">Your score reveals where your organisation stands. The next step is a project brief scoped specifically to your gaps and goals.</p>
+        </div>
+        <button class="btn-nudge" onclick="startProjectFromScore()">
+          Start a Project with Aperintel
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div class="result-actions">
       <a href="intelligence-brief.html" class="btn-primary-lg">
         Generate Intelligence Brief
@@ -610,7 +689,6 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
         </svg>
       </a>
-      <a href="index.html#contact" onclick="window.location='index.html'" class="btn-ghost-lg">Request Access</a>
       <button class="result-retake" onclick="retakeAssessment()">Retake assessment</button>
     </div>
   </div>
@@ -826,6 +904,23 @@ function retakeAssessment() {
   step = 0;
   answers = new Array(5).fill(null);
   showScreen('screenWelcome');
+}
+
+function startProjectFromScore() {
+  // Store score context for pre-population on solution-brief.html
+  const level = document.getElementById('resultLevel').textContent;
+  const headline = document.getElementById('resultHeadline').textContent;
+  const summary = document.getElementById('resultSummary').textContent;
+  const strengths = Array.from(document.getElementById('resultStrengths').querySelectorAll('li')).map(li => li.textContent).join(', ');
+  const gaps = Array.from(document.getElementById('resultGaps').querySelectorAll('li')).map(li => li.textContent).join(', ');
+  const recommendation = document.getElementById('resultRecProduct').textContent;
+  const reason = document.getElementById('resultRecReason').textContent;
+
+  sessionStorage.setItem('aperintel_prefill', JSON.stringify({
+    source: 'intelligence-score',
+    level, headline, summary, strengths, gaps, recommendation, reason
+  }));
+  window.location.href = 'solution-brief.html';
 }
 </script>
 </body>
