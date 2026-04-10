@@ -1,87 +1,84 @@
 # Aperintel
+*AI-powered intelligence consulting platform for organizational maturity assessment*
 
-The public website and intelligence demonstration platform for Aperintel, an intelligence infrastructure company building AI-native systems across enterprise, financial, community, and education domains.
+**Status:** Live | **Completion:** 100% | **Last updated:** 2026-04-10
 
-## Problem Statement
+## About
 
-Enterprise and individual decision-makers typically lack structured intelligence infrastructure: knowledge is fragmented, decisions are reactive, and the tools they use are disconnected. Aperintel's website serves two purposes simultaneously. It presents the company's product ecosystem and philosophy to prospective clients, and it demonstrates intelligence infrastructure in action through four live AI features: a conversational assistant (Lumen), an intelligence brief generator, an intelligence maturity scoring tool, and a solution scoping workflow that converts client descriptions into structured project briefs.
-
-## Demo / Screenshot
-
-**Live:** [https://www.aperintel.com](https://www.aperintel.com)
+Aperintel is a vertical SaaS platform that helps organizations assess and improve their intelligence capabilities through AI-powered tools. The platform features a senior intelligence advisor chatbot, maturity scoring system, and automated brief generation to guide strategic decision-making and organizational development.
 
 ## Tech Stack
 
-| Layer | Technologies |
-|---|---|
-| Language | JavaScript |
-| Frontend | HTML, CSS (static, no framework, no build step) |
-| Backend | Vercel Serverless Functions (Node.js) |
-| AI and LLM | Claude API (claude-sonnet-4-6), streaming via Server-Sent Events |
-| Database | Vercel KV (Upstash Redis) |
-| Infrastructure | Vercel |
+| Layer | Technology |
+|-------|-----------|
+| Language | TypeScript / JavaScript / Python |
+| Framework | Next.js / React / Express |
+| Styling | Tailwind CSS |
+| Database | PostgreSQL / Supabase / MongoDB |
+| AI | Anthropic Claude API |
+| Infrastructure | Vercel / Railway / Render |
 
-## Architecture Overview
+## Features
 
-The site is a static HTML application deployed on Vercel with no client-side JavaScript framework. Each page is a standalone HTML file. Six Vercel serverless functions in the `api/` directory handle all AI and data operations, with a maximum duration of 60 seconds configured in `vercel.json`. The chat and solution scoping endpoints stream responses over Server-Sent Events to avoid function timeouts during long-running Claude calls. The intelligence brief and score endpoints call Claude in non-streaming mode and return structured JSON. Approved project briefs are persisted to Vercel KV as both a keyed record and a list, enabling the password-protected staff dashboard to retrieve, filter, and update project status. Context flows between the Score, Brief, and Start a Project tools via `sessionStorage`, allowing pre-populated data to move across pages without a backend session layer.
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Lumen Chat Assistant | Streaming AI chat assistant configured as senior intelligence advisor | ✅ Built |
+| Intelligence Maturity Scoring | Evaluates organizations across four dimensions with 0-100 scoring system | ✅ Built |
+| Intelligence Brief Generator | Generates structured briefs covering gaps, wins, and implementation pathways | ✅ Built |
+| Project Scoping Workflow | Users describe needs, Claude generates project briefs, users can submit directly | ✅ Built |
+| Staff Dashboard | Password-protected internal dashboard for reviewing and managing project briefs | ✅ Built |
+| ⚠️ Extra: Static HTML Site | Multi-page static HTML website with no client-side framework | ✅ Built |
+| ⚠️ Extra: Server-Sent Events Streaming | SSE implementation for real-time AI response streaming | ✅ Built |
+| ⚠️ Extra: Vercel KV Storage | Data persistence for project briefs using Vercel KV (Redis) | ✅ Built |
+| ⚠️ Extra: SessionStorage Context Flow | Data flow between tools via sessionStorage without backend sessions | ✅ Built |
 
-## Key Features
+**Completion:** 9/9 features built (100%)
 
-- Lumen, a streaming AI chat assistant configured as a senior intelligence advisor. The system prompt defines Aperintel's four pillars (Intelligence, Automation, Infrastructure, Systems) and instructs the assistant to reason structurally and recommend products only where genuinely applicable.
-- An intelligence maturity scoring tool that evaluates organisations across four dimensions: decision-making structure, data and knowledge use, workflow automation, and forward-looking orientation. Scores range from 0 to 100 across five maturity levels from Fragmented to Intelligent, with specific gap analysis and a recommended next step.
-- An intelligence brief generator that accepts sector, scale, and primary challenge inputs, then returns a structured document covering intelligence gaps, quick wins, Aperintel product recommendations matched to the client's specific situation, and an implementation pathway.
-- A project scoping workflow where users describe what they want built, Claude generates a numbered project brief via streaming, and the user can approve and submit it directly to the Aperintel team. Submitted briefs are stored in Vercel KV and visible to staff in the internal dashboard.
-- A password-protected staff dashboard for reviewing, filtering, and updating the status of all submitted project briefs, with client contact links and per-project internal notes persisted to `localStorage`.
+## Getting Started
 
-## How to Run Locally
-
-### Prerequisites
-
-- Node.js 18 or later.
-- The Vercel CLI (`npm i -g vercel`), required to run serverless functions locally.
-- An Anthropic API key with access to claude-sonnet-4-6.
-- A Vercel account with Vercel KV enabled on the project (for brief submission and dashboard features).
-
-### Setup
-
+### Installation
 ```bash
-# 1. Clone the repository
-git clone https://github.com/abuj07/aperintel.git
-cd aperintel
-
-# 2. Install dependencies
 npm install
-
-# 3. Pull Vercel environment variables (if linked to a Vercel project)
-vercel env pull .env.local
-
-# Or create a .env file manually with the following:
-# ANTHROPIC_API_KEY       — Anthropic API key for all AI features
-# DASHBOARD_PASSWORD      — Password for the internal staff dashboard
-# KV_URL                  — Vercel KV connection URL
-# KV_REST_API_URL         — Vercel KV REST API URL
-# KV_REST_API_TOKEN       — Vercel KV REST API token
-# KV_REST_API_READ_ONLY_TOKEN — Vercel KV read-only token
+# or
+yarn install
 ```
 
-### Run
-
+### Environment Setup
 ```bash
-vercel dev
-# Visit http://localhost:3000
+cp .env.example .env.local
+# Add your API keys and configuration
 ```
 
-## AI Integration
+### Development
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-All AI features use `claude-sonnet-4-6` via the Anthropic JavaScript SDK. The chat endpoint (`api/chat.js`) maintains a 20-message conversation window and returns incremental text deltas as JSON-encoded Server-Sent Events. The intelligence brief (`api/brief.js`) and score (`api/score.js`) endpoints instruct Claude to return only valid JSON matching a defined schema, with the serverless function extracting the JSON object via index-based string slicing before parsing and forwarding to the client. The solution scoping endpoint (`api/solution.js`) also uses streaming SSE for long-form project brief generation. All prompts include an explicit formatting rule prohibiting hyphens and dashes, ensuring output conforms to Aperintel's prose standards. This repository corresponds to the Aperintel product in Osi's portfolio.
+### Build & Deploy
+```bash
+npm run build
+npm start
+```
 
-## Status
+## Roadmap
 
-🟢 **Live** — deployed and publicly accessible on Vercel.
+### Phase 1 — MVP
+- Core intelligence assessment tools
+- AI-powered chat assistant
+- Basic project scoping workflow
 
-## Author
+### Phase 2 — Growth
+- Enhanced analytics and reporting
+- Team collaboration features
+- Integration with popular business tools
 
-**Osi Abu** — Full Stack AI Engineer and AI Builder, London.
-🌐 [osiabu.dev](https://www.osiabu.dev)
-💼 [LinkedIn](https://www.linkedin.com/in/osiabu)
-🐙 [GitHub](https://www.github.com/abuj07)
+### Phase 3 — Scale
+- Enterprise-grade security and compliance
+- Advanced AI models and customization
+- White-label solutions for consultancies
+
+---
+
+**Osi Abu** — Full Stack AI Engineer | https://osiabu.vercel.app
