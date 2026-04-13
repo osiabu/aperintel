@@ -1,11 +1,11 @@
 # Aperintel
-*AI-powered intelligence consulting platform for organizational maturity assessment*
+*AI-powered intelligence advisory platform for organizational maturity assessment*
 
-**Status:** Live | **Completion:** 100% | **Last updated:** 2026-04-10
+**Status:** Live | **Completion:** 100% | **Last updated:** 2026-04-13
 
 ## About
 
-Aperintel is a vertical SaaS platform that helps organizations assess and improve their intelligence capabilities through AI-powered tools. The platform features a senior intelligence advisor chatbot, maturity scoring system, and automated brief generation to guide strategic decision-making and organizational development.
+Aperintel is a vertical SaaS platform that helps organizations assess and improve their intelligence capabilities through AI-powered advisory tools. The platform features an intelligent chat assistant, maturity scoring systems, and automated brief generation to guide strategic intelligence decisions.
 
 ## Tech Stack
 
@@ -36,27 +36,28 @@ Aperintel is a vertical SaaS platform that helps organizations assess and improv
 
 ## Getting Started
 
-### Installation
+### Prerequisites
 ```bash
-npm install
-# or
-yarn install
+node >= 18.0.0
+npm >= 8.0.0
 ```
 
-### Environment Setup
+### Installation
 ```bash
+git clone https://github.com/osiabu/aperintel.git
+cd aperintel
+npm install
 cp .env.example .env.local
-# Add your API keys and configuration
+# Configure your environment variables
 ```
 
 ### Development
 ```bash
 npm run dev
-# or
-yarn dev
+# Open http://localhost:3000
 ```
 
-### Build & Deploy
+### Production
 ```bash
 npm run build
 npm start
@@ -65,19 +66,19 @@ npm start
 ## Roadmap
 
 ### Phase 1 — MVP
-- Core intelligence assessment tools
+- Core intelligence advisory tools
 - AI-powered chat assistant
-- Basic project scoping workflow
+- Basic organizational assessment capabilities
 
 ### Phase 2 — Growth
-- Enhanced analytics and reporting
-- Team collaboration features
-- Integration with popular business tools
+- Advanced analytics and reporting
+- Multi-organization support
+- Integration with external intelligence platforms
 
 ### Phase 3 — Scale
 - Enterprise-grade security and compliance
-- Advanced AI models and customization
 - White-label solutions for consultancies
+- Advanced machine learning for predictive intelligence insights
 
 ---
 
