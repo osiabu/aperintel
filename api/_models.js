@@ -18,7 +18,7 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-pro',
-      contents: userPrompt,
+      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       config: {
         systemInstruction: systemPrompt,
         maxOutputTokens: maxTokens
@@ -51,7 +51,7 @@ async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
     const stream = await ai.models.generateContentStream({
       model: 'gemini-2.5-pro',
-      contents: userPrompt,
+      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       config: {
         systemInstruction: systemPrompt,
         maxOutputTokens: maxTokens
