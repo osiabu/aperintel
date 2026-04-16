@@ -2,7 +2,7 @@
  * Aperintel AI Model Layer
  *
  * Primary:   Gemini 2.5 Pro  (@google/genai)
- * Secondary: Claude Haiku 4.5 (@anthropic-ai/sdk) — fallback if Gemini fails or key absent
+ * Fallback:  Claude Haiku 4.5 (@anthropic-ai/sdk) — only if Gemini key absent
  */
 
 const { GoogleGenAI } = require('@google/genai');
@@ -15,28 +15,22 @@ const Anthropic = require('@anthropic-ai/sdk');
 async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
   // --- Primary: Gemini 2.5 Pro ---
   if (process.env.GOOGLE_API_KEY) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-pro',
-        contents: userPrompt,
-        config: {
-          systemInstruction: systemPrompt,
-          maxOutputTokens: maxTokens,
-          responseMimeType: 'application/json'
-        }
-      });
-      const text = response.text;
-      if (!text || !text.trim()) throw new Error('Empty response from Gemini');
-      return text;
-    } catch (err) {
-      console.error('[Gemini 2.5 Pro] error, falling back to Haiku 4.5:', err.message);
-    }
-  } else {
-    console.warn('[Gemini] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
+    const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-pro',
+      contents: userPrompt,
+      config: {
+        systemInstruction: systemPrompt,
+        maxOutputTokens: maxTokens
+      }
+    });
+    const text = response.text;
+    if (!text || !text.trim()) throw new Error('Empty response from Gemini 2.5 Pro');
+    return text;
   }
 
-  // --- Fallback: Claude Haiku 4.5 ---
+  // --- Fallback: Claude Haiku 4.5 (only if no Google key) ---
+  console.warn('[Gemini] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const message = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
@@ -54,36 +48,30 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
 async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 2048) {
   // --- Primary: Gemini 2.5 Pro (streaming) ---
   if (process.env.GOOGLE_API_KEY) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
-      const stream = await ai.models.generateContentStream({
-        model: 'gemini-2.5-pro',
-        contents: userPrompt,
-        config: {
-          systemInstruction: systemPrompt,
-          maxOutputTokens: maxTokens,
-          responseMimeType: 'application/json'
-        }
-      });
-
-      let accumulated = '';
-      for await (const chunk of stream) {
-        const text = chunk.text;
-        if (text) {
-          accumulated += text;
-          writeChunk(text);
-        }
+    const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+    const stream = await ai.models.generateContentStream({
+      model: 'gemini-2.5-pro',
+      contents: userPrompt,
+      config: {
+        systemInstruction: systemPrompt,
+        maxOutputTokens: maxTokens
       }
-      if (!accumulated.trim()) throw new Error('Empty streaming response from Gemini');
-      return accumulated;
-    } catch (err) {
-      console.error('[Gemini 2.5 Pro stream] error, falling back to Haiku 4.5:', err.message);
+    });
+
+    let accumulated = '';
+    for await (const chunk of stream) {
+      const text = chunk.text;
+      if (text) {
+        accumulated += text;
+        writeChunk(text);
+      }
     }
-  } else {
-    console.warn('[Gemini stream] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
+    if (!accumulated.trim()) throw new Error('Empty streaming response from Gemini 2.5 Pro');
+    return accumulated;
   }
 
-  // --- Fallback: Claude Haiku 4.5 (streaming) ---
+  // --- Fallback: Claude Haiku 4.5 (only if no Google key) ---
+  console.warn('[Gemini stream] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const stream = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
@@ -110,37 +98,32 @@ async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 
 async function chatStream(systemPrompt, messages, writeChunk, maxTokens = 1024) {
   // --- Primary: Gemini 2.5 Pro (multi-turn streaming) ---
   if (process.env.GOOGLE_API_KEY) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
-      // Convert Anthropic-style messages to Gemini format
-      const geminiContents = messages.map(m => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      }));
+    // Convert Anthropic-style messages to Gemini format
+    const geminiContents = messages.map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }]
+    }));
 
-      const stream = await ai.models.generateContentStream({
-        model: 'gemini-2.5-pro',
-        contents: geminiContents,
-        config: {
-          systemInstruction: systemPrompt,
-          maxOutputTokens: maxTokens
-        }
-      });
-
-      for await (const chunk of stream) {
-        const text = chunk.text;
-        if (text) writeChunk(text);
+    const stream = await ai.models.generateContentStream({
+      model: 'gemini-2.5-pro',
+      contents: geminiContents,
+      config: {
+        systemInstruction: systemPrompt,
+        maxOutputTokens: maxTokens
       }
-      return;
-    } catch (err) {
-      console.error('[Gemini 2.5 Pro chat stream] error, falling back to Haiku 4.5:', err.message);
+    });
+
+    for await (const chunk of stream) {
+      const text = chunk.text;
+      if (text) writeChunk(text);
     }
-  } else {
-    console.warn('[Gemini chat] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
+    return;
   }
 
-  // --- Fallback: Claude Haiku 4.5 (streaming) ---
+  // --- Fallback: Claude Haiku 4.5 (only if no Google key) ---
+  console.warn('[Gemini chat] GOOGLE_API_KEY not set — using Haiku 4.5 fallback');
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   const stream = await client.messages.create({
     model: 'claude-haiku-4-5-20251001',
