@@ -14,7 +14,7 @@ const Anthropic = require('@anthropic-ai/sdk');
  * output when Gemini 2.5 Pro thinking tokens exhaust the token budget first.
  * Returns the full accumulated text as a string.
  */
-async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
+async function generate(systemPrompt, userPrompt, maxTokens = 8192) {
   // --- Primary: Gemini 2.5 Pro (via streaming to avoid empty-response issue) ---
   if (process.env.GOOGLE_API_KEY) {
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
@@ -50,7 +50,7 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
  * Generate a streaming completion, writing chunks via writeChunk(text).
  * Resolves with the full accumulated text once complete.
  */
-async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 2048) {
+async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 8192) {
   // --- Primary: Gemini 2.5 Pro (streaming) ---
   if (process.env.GOOGLE_API_KEY) {
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });

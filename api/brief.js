@@ -53,8 +53,7 @@ FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in your resp
   try {
     const text = await generate(
       'You are an elite intelligence strategist at Aperintel. Return ONLY valid JSON with no markdown or explanation.',
-      prompt,
-      1024
+      prompt
     );
     const jsonStart = text.indexOf('{');
     const jsonEnd = text.lastIndexOf('}') + 1;

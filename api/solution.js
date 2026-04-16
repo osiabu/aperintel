@@ -86,8 +86,7 @@ CRITICAL FORMATTING RULE: Do not use hyphens, em dashes or en dashes anywhere in
     accumulated = await generateStream(
       'You are a senior solutions architect and product strategist at Aperintel. Return ONLY valid JSON with no markdown, no code blocks, and no explanation outside the JSON.',
       prompt,
-      (text) => res.write(`data: ${JSON.stringify({ chunk: text })}\n\n`),
-      4096
+      (text) => res.write(`data: ${JSON.stringify({ chunk: text })}\n\n`)
     );
   } catch (err) {
     clearInterval(heartbeat);
