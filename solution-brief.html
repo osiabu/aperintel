@@ -1098,6 +1098,23 @@ async function submitBrief() {
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.error || 'Submission failed.');
 
+    // Notify via Formspree (fire-and-forget — does not block confirmation)
+    fetch('https://formspree.io/f/xreoqenb', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _subject: `New Project Brief: ${data.reference} — ${currentSolution.solutionName || 'Untitled'}`,
+        reference: data.reference,
+        solution_type: currentSolution.solutionType || '',
+        solution_name: currentSolution.solutionName || '',
+        client_name: contact.name,
+        client_email: contact.email,
+        client_organisation: contact.organisation || 'Not provided',
+        notes: contact.notes || 'None',
+        description: description.slice(0, 500)
+      })
+    }).catch(() => {}); // silent — KV is source of truth
+
     document.getElementById('confirmRef').textContent = `Reference: ${data.reference}`;
     setPhase(5);
 
