@@ -77,6 +77,13 @@
     transition: opacity 0.2s;
   }
   .gate-btn:hover { opacity: 0.87; }
+  .gate-back {
+    display: block; margin-top: 20px;
+    font-size: 12px; color: var(--grey-2);
+    text-decoration: none; text-align: center;
+    transition: color 0.2s;
+  }
+  .gate-back:hover { color: var(--grey-1); }
   .gate-error {
     font-size: 13px; color: #f87171;
     margin-top: 12px; display: none;
@@ -388,6 +395,7 @@
     >
     <button class="gate-btn" onclick="attemptLogin()">Access Dashboard</button>
     <p class="gate-error" id="gateError">Incorrect password. Please try again.</p>
+    <a href="/" class="gate-back">← Back to website</a>
   </div>
 </div>
 
@@ -406,6 +414,7 @@
         </svg>
         Refresh
       </button>
+      <a href="/" class="dash-signout" style="text-decoration:none;">← Website</a>
       <button class="dash-signout" onclick="signOut()">Sign out</button>
     </div>
   </nav>
