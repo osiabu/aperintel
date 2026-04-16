@@ -1,0 +1,10 @@
+{
+  "name": "aperintel",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/genai": "^1.0.0",
+    "@vercel/kv": "^3.0.0"
+  }
+}
