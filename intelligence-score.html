@@ -842,15 +842,22 @@ async function submitAssessment() {
     question: q.q,
     answer: q.opts[answers[i]]
   }));
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+
   try {
     const res = await fetch('/api/score', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers: builtAnswers })
+      body: JSON.stringify({ answers: builtAnswers }),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
+
     const data = await res.json();
     renderResult(data);
   } catch {
+    clearTimeout(timeout);
     showScreen('screenWelcome');
     alert('Something went wrong. Please try again.');
   }

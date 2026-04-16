@@ -625,12 +625,17 @@ async function generateBrief() {
   });
   document.getElementById('docFooter').classList.remove('visible');
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+
   try {
     const res = await fetch('/api/brief', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sector, challenge, scale })
+      body: JSON.stringify({ sector, challenge, scale }),
+      signal: controller.signal
     });
+    clearTimeout(timeout);
 
     if (!res.ok) throw new Error('API error');
     const brief = await res.json();
@@ -638,6 +643,7 @@ async function generateBrief() {
     renderBrief(brief, sector, scale);
 
   } catch {
+    clearTimeout(timeout);
     status.classList.remove('active');
     idle.style.display = 'flex';
     idle.querySelector('.idle-body').textContent = 'Something went wrong. Please try again.';
