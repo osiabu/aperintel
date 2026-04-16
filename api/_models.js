@@ -9,14 +9,16 @@ const { GoogleGenAI } = require('@google/genai');
 const Anthropic = require('@anthropic-ai/sdk');
 
 /**
- * Generate a single non-streaming completion.
- * Returns the response text as a string.
+ * Generate a single completion.
+ * Uses streaming internally — generateContent (non-streaming) swallows text
+ * output when Gemini 2.5 Pro thinking tokens exhaust the token budget first.
+ * Returns the full accumulated text as a string.
  */
 async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
-  // --- Primary: Gemini 2.5 Pro ---
+  // --- Primary: Gemini 2.5 Pro (via streaming to avoid empty-response issue) ---
   if (process.env.GOOGLE_API_KEY) {
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
-    const response = await ai.models.generateContent({
+    const stream = await ai.models.generateContentStream({
       model: 'gemini-2.5-pro',
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       config: {
@@ -24,8 +26,11 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
         maxOutputTokens: maxTokens
       }
     });
-    const text = response.text;
-    if (!text || !text.trim()) throw new Error('Empty response from Gemini 2.5 Pro');
+    let text = '';
+    for await (const chunk of stream) {
+      if (chunk.text) text += chunk.text;
+    }
+    if (!text.trim()) throw new Error('Empty response from Gemini 2.5 Pro');
     return text;
   }
 
