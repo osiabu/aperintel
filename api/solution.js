@@ -79,19 +79,24 @@ CRITICAL FORMATTING RULE: Do not use hyphens, em dashes or en dashes anywhere in
 
   let accumulated = '';
 
+  // Ping every 8s so the SSE connection stays alive during Gemini's thinking phase
+  const heartbeat = setInterval(() => res.write(': keepalive\n\n'), 8000);
+
   try {
     accumulated = await generateStream(
       'You are a senior solutions architect and product strategist at Aperintel. Return ONLY valid JSON with no markdown, no code blocks, and no explanation outside the JSON.',
       prompt,
-      // Send each chunk as a heartbeat so the connection stays alive
       (text) => res.write(`data: ${JSON.stringify({ chunk: text })}\n\n`),
       4096
     );
   } catch (err) {
+    clearInterval(heartbeat);
     console.error('Solution error:', err);
     res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
     return res.end();
   }
+
+  clearInterval(heartbeat);
 
   // Extract and validate JSON from the accumulated text
   const jsonStart = accumulated.indexOf('{');

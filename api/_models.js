@@ -23,8 +23,7 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
         config: {
           systemInstruction: systemPrompt,
           maxOutputTokens: maxTokens,
-          responseMimeType: 'application/json',
-          thinkingConfig: { thinkingBudget: 0 }
+          responseMimeType: 'application/json'
         }
       });
       const text = response.text;
@@ -63,8 +62,7 @@ async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 
         config: {
           systemInstruction: systemPrompt,
           maxOutputTokens: maxTokens,
-          responseMimeType: 'application/json',
-          thinkingConfig: { thinkingBudget: 0 }
+          responseMimeType: 'application/json'
         }
       });
 
