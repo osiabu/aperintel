@@ -1,4 +1,4 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const { chatStream } = require('./_models');
 
 const SYSTEM_PROMPT = `You are the Aperintel Intelligence Assistant — a direct embodiment of the intelligence infrastructure Aperintel builds. You help visitors understand Aperintel and how its systems apply to their needs.
 
@@ -90,23 +90,13 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.flushHeaders();
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
   try {
-    const stream = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: messages.slice(-20),
-      stream: true
-    });
-
-    for await (const event of stream) {
-      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-        res.write(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`);
-      }
-    }
-
+    await chatStream(
+      SYSTEM_PROMPT,
+      messages.slice(-20),
+      (text) => res.write(`data: ${JSON.stringify({ text })}\n\n`),
+      1024
+    );
     res.write('data: [DONE]\n\n');
   } catch (err) {
     console.error('Chat error:', err);

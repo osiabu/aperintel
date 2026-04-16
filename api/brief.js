@@ -1,4 +1,4 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const { generate } = require('./_models');
 
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
@@ -17,7 +17,6 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const prompt = `You are an elite intelligence strategist at Aperintel. A visitor has described their organisation. Generate a precise, structured Intelligence Brief.
 
@@ -52,13 +51,11 @@ Only recommend products that genuinely fit their described challenge. Be specifi
 FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in your response. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences instead.`;
 
   try {
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }]
-    });
-
-    const text = message.content[0].text.trim();
+    const text = await generate(
+      'You are an elite intelligence strategist at Aperintel. Return ONLY valid JSON with no markdown or explanation.',
+      prompt,
+      1024
+    );
     const jsonStart = text.indexOf('{');
     const jsonEnd = text.lastIndexOf('}') + 1;
     const jsonStr = text.slice(jsonStart, jsonEnd);

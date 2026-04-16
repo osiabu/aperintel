@@ -1,4 +1,4 @@
-const Anthropic = require('@anthropic-ai/sdk');
+const { generateStream } = require('./_models');
 
 module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') {
@@ -15,8 +15,6 @@ module.exports = async function handler(req, res) {
   if (!description || description.trim().length < 20) {
     return res.status(400).json({ error: 'Please provide a more detailed description.' });
   }
-
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const contextLines = [
     industry && `Industry: ${industry}`,
@@ -79,48 +77,40 @@ CRITICAL FORMATTING RULE: Do not use hyphens, em dashes or en dashes anywhere in
   res.setHeader('X-Accel-Buffering', 'no');
   res.flushHeaders();
 
+  let accumulated = '';
+
   try {
-    const stream = await client.messages.create({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
-      stream: true
-    });
-
-    let accumulated = '';
-
-    for await (const event of stream) {
-      if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-        accumulated += event.delta.text;
-        // Send a heartbeat so the connection stays alive and the client knows we're working
-        res.write(`data: ${JSON.stringify({ chunk: event.delta.text })}\n\n`);
-      }
-    }
-
-    // Extract and validate JSON from the accumulated text
-    const jsonStart = accumulated.indexOf('{');
-    const jsonEnd = accumulated.lastIndexOf('}') + 1;
-
-    if (jsonStart === -1 || jsonEnd <= jsonStart) {
-      res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
-      return res.end();
-    }
-
-    let solution;
-    try {
-      solution = JSON.parse(accumulated.slice(jsonStart, jsonEnd));
-    } catch (parseErr) {
-      console.error('JSON parse error:', parseErr.message);
-      res.write(`data: ${JSON.stringify({ error: 'Failed to parse solution brief. Please try again.' })}\n\n`);
-      return res.end();
-    }
-
-    res.write(`data: ${JSON.stringify({ done: true, solution })}\n\n`);
-    res.end();
-
+    accumulated = await generateStream(
+      'You are a senior solutions architect and product strategist at Aperintel. Return ONLY valid JSON with no markdown, no code blocks, and no explanation outside the JSON.',
+      prompt,
+      // Send each chunk as a heartbeat so the connection stays alive
+      (text) => res.write(`data: ${JSON.stringify({ chunk: text })}\n\n`),
+      2048
+    );
   } catch (err) {
     console.error('Solution error:', err);
     res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
-    res.end();
+    return res.end();
   }
+
+  // Extract and validate JSON from the accumulated text
+  const jsonStart = accumulated.indexOf('{');
+  const jsonEnd = accumulated.lastIndexOf('}') + 1;
+
+  if (jsonStart === -1 || jsonEnd <= jsonStart) {
+    res.write(`data: ${JSON.stringify({ error: 'Failed to generate solution brief. Please try again.' })}\n\n`);
+    return res.end();
+  }
+
+  let solution;
+  try {
+    solution = JSON.parse(accumulated.slice(jsonStart, jsonEnd));
+  } catch (parseErr) {
+    console.error('JSON parse error:', parseErr.message);
+    res.write(`data: ${JSON.stringify({ error: 'Failed to parse solution brief. Please try again.' })}\n\n`);
+    return res.end();
+  }
+
+  res.write(`data: ${JSON.stringify({ done: true, solution })}\n\n`);
+  res.end();
 };
