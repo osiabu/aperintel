@@ -854,6 +854,7 @@ async function submitAssessment() {
     });
     clearTimeout(timeout);
 
+    if (!res.ok) throw new Error('API error');
     const data = await res.json();
     renderResult(data);
   } catch {

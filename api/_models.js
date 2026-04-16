@@ -27,7 +27,9 @@ async function generate(systemPrompt, userPrompt, maxTokens = 1024) {
           thinkingConfig: { thinkingBudget: 0 }
         }
       });
-      return response.text;
+      const text = response.text;
+      if (!text || !text.trim()) throw new Error('Empty response from Gemini');
+      return text;
     } catch (err) {
       console.error('[Gemini 2.5 Pro] error, falling back to Haiku 4.5:', err.message);
     }
@@ -74,6 +76,7 @@ async function generateStream(systemPrompt, userPrompt, writeChunk, maxTokens = 
           writeChunk(text);
         }
       }
+      if (!accumulated.trim()) throw new Error('Empty streaming response from Gemini');
       return accumulated;
     } catch (err) {
       console.error('[Gemini 2.5 Pro stream] error, falling back to Haiku 4.5:', err.message);
