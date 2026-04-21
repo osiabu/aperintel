@@ -30,17 +30,21 @@ ${description.trim()}
 ${contextLines ? `\nADDITIONAL CONTEXT:\n${contextLines}` : ''}
 
 APERINTEL PRODUCT ECOSYSTEM (for reference when recommending existing solutions):
-- Enterprise Platform: AI-native knowledge platform for organisations
-- Avant: AI-assisted software delivery operating system
-- Tipintel: Financial market intelligence and decision support
-- Aoura: Private AI personal companion on zero-knowledge architecture
-- Aces: Community intelligence and ecosystem management platform
-- Tekkiestack: Learning platform for young people who want to code, part of Aperintel's education arm
-- Wingman: AI trade analysis platform (live)
-- Orion: AI orchestration layer for existing operating systems
-- Titan OS: AI-native operating system (concept stage)
-- The Depression Project: Mental health AI research initiative
-- Education Systems: Intelligent education and training platforms, part of Aperintel's growing education arm
+- Nexus: AI governance infrastructure platform for regulated industries (financial services, healthcare, legal). Target: compliance officers, CTOs, CISOs at regulated organisations.
+- Avant OS: Unified AI-powered organisational operating system for consulting firms and project-driven organisations. Target: professional services and delivery teams.
+- PaulaQI: AI healthcare quality intelligence platform aligned to the CQC Single Assessment Framework. Target: healthcare quality consultants and NHS provider organisations only.
+- Evidia: Evidence-driven academic intelligence platform for AI-assisted research. Target: researchers, academics, and universities only.
+- Wingman: AI trade analysis platform (live). Target: retail traders and institutional investors only.
+- Aoura: Private AI personal companion on zero-knowledge architecture. Target: individuals only.
+- Aces: Community intelligence and ecosystem management platform. Target: community groups and associations only.
+- Orion: AI orchestration layer for existing operating systems (not yet available).
+- Titan OS: AI-native operating system (concept stage only, not available).
+- The Depression Project: Mental health AI research initiative (research stage only, not a commercial product).
+
+CRITICAL RECOMMENDATION RULES:
+- Never recommend Tekkiestack to any business, organisation, or professional client. Tekkiestack is strictly a learning platform for young people and educational institutions. It is never appropriate in a business or organisational project brief.
+- Never recommend Titan OS, The Depression Project, or Education Systems as solutions to any client request.
+- Only include a product in aperintelProducts if it genuinely fits the client's sector and challenge.
 
 INSTRUCTIONS:
 Assess whether this request is best met by existing Aperintel products, a custom build, or a combination. Be honest. If the client needs something bespoke that does not exist in the product lineup, say so clearly and scope it as a custom development engagement.

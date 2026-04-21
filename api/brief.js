@@ -45,8 +45,20 @@ Return ONLY valid JSON (no markdown, no explanation) with this exact structure:
   "pathway": "2-3 sentences describing the recommended implementation approach and what changes first"
 }
 
-Available Aperintel products to recommend from: Enterprise Platform, Avant, Tipintel, Wingman, Aoura, Aces, Tekkiestack, Orion, Titan OS, The Depression Project, Education Systems.
-Only recommend products that genuinely fit their described challenge. Be specific and insightful, not generic. Keep all text values concise: maximum 1 to 2 sentences per field.
+Available Aperintel products to recommend from (match strictly to the organisation's sector and challenge):
+- Nexus: regulated enterprises in financial services, healthcare, or legal needing AI governance and compliance infrastructure
+- Avant OS: consulting firms, project-driven organisations, and professional services needing a unified operating system
+- PaulaQI: healthcare quality consultants and NHS provider organisations only
+- Evidia: researchers, academics, and universities only
+- Wingman: retail traders and institutional investors only
+- Aoura: individuals seeking private AI assistance only
+- Aces: community groups and associations only
+
+CRITICAL RECOMMENDATION RULES:
+- Never recommend Tekkiestack to any organisation, business, professional, or adult context. Tekkiestack is strictly for young learners and educational institutions teaching technology to younger students.
+- Never recommend Orion, Titan OS, The Depression Project, or Education Systems as solutions to any business or organisational challenge.
+- Only recommend products that genuinely fit the organisation's described sector and challenge. If no product is a current fit, omit the recommendations array or leave it empty.
+- Be specific and insightful, not generic. Keep all text values concise: maximum 1 to 2 sentences per field.
 
 FORMATTING RULE: Never use hyphens, em dashes or en dashes anywhere in your response. Use commas, semicolons, colons, full stops, or rephrase into properly constructed sentences instead.`;
 

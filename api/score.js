@@ -44,10 +44,20 @@ Return ONLY valid JSON (no markdown) with this exact structure:
     "Specific intelligence gap based on their answers",
     "Specific intelligence gap based on their answers"
   ],
-  "topProduct": "<most relevant Aperintel product for them>",
+  "topProduct": "<most relevant Aperintel product for them — choose from: Nexus, Avant OS, PaulaQI, Evidia, Wingman, Aoura, Aces>",
   "productReason": "One sentence on why this product addresses their biggest gap",
   "nextStep": "One concrete, actionable recommendation they can act on immediately"
 }
+
+CRITICAL PRODUCT RULES:
+- Nexus: for regulated enterprises (financial services, healthcare, legal) needing AI governance and compliance infrastructure
+- Avant OS: for consulting firms, project-driven organisations, and professional services needing a unified operating system
+- PaulaQI: for healthcare quality consultants and NHS provider organisations only
+- Evidia: for researchers, academics, and universities only
+- Wingman: for retail traders and institutional investors only
+- Aoura: for individuals seeking private AI assistance only
+- Aces: for community groups and associations only
+- Never recommend Tekkiestack, Orion, Titan OS, The Depression Project, or Education Systems as a topProduct. These are not appropriate for any organisation completing this assessment.
 
 Intelligence levels:
 - 0-20: Fragmented (reactive, disconnected, no intelligence structure)
