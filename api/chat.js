@@ -68,10 +68,10 @@ TARGET AUDIENCE: Educational institutions and young learners. Not for enterprise
 
 ECOSYSTEM STRUCTURE:
 - Governance Layer: Nexus, PaulaQI
-- Organisational Intelligence Layer: Avant OS
-- Foundation Layer: Enterprise Platform, Orion, Titan OS
+- Organisational Intelligence Layer: Avant OS, Orion OS
+- Foundation Layer: Avant OS Core, Orion OS
 - Execution Layer: Avant OS
-- Education Layer: Tekkiestack, Education Systems
+- Education Layer: Customised Education Management System
 - Intelligence Layer: Wingman, Aoura
 - Research Layer: Evidia
 - Community Layer: Aces
