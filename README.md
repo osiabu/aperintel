@@ -1,16 +1,13 @@
-# Aperintel
-*AI-powered intelligence advisory platform for organizational maturity assessment*
+# Aperintel: AI-Powered Intelligence Suite for Modern Enterprises
 
-**Status:** Live | **Completion:** 100% | **Last updated:** 2026-04-13
+**Status:** `Live` | **Completion:** `100%` | **Last Updated:** `2026-04-22`
 
-## About
-
-Aperintel is a vertical SaaS platform that helps organizations assess and improve their intelligence capabilities through AI-powered advisory tools. The platform features an intelligent chat assistant, maturity scoring systems, and automated brief generation to guide strategic intelligence decisions.
+Aperintel is a vertical SaaS platform designed to elevate organizational intelligence capabilities. It provides a suite of AI-powered tools that enable enterprises to assess their intelligence maturity, generate structured analytical briefs, and scope strategic projects with expert assistance. This product solves the critical problem of disconnected and inefficient intelligence workflows by providing a unified, data-driven environment for strategic planning and decision-making.
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|---|---|
 | Language | TypeScript / JavaScript / Python |
 | Framework | Next.js / React / Express |
 | Styling | Tailwind CSS |
@@ -21,7 +18,7 @@ Aperintel is a vertical SaaS platform that helps organizations assess and improv
 ## Features
 
 | Feature | Description | Status |
-|---------|-------------|--------|
+|---|---|---|
 | Lumen Chat Assistant | Streaming AI chat assistant configured as senior intelligence advisor | ✅ Built |
 | Intelligence Maturity Scoring | Evaluates organizations across four dimensions with 0-100 scoring system | ✅ Built |
 | Intelligence Brief Generator | Generates structured briefs covering gaps, wins, and implementation pathways | ✅ Built |
@@ -32,54 +29,48 @@ Aperintel is a vertical SaaS platform that helps organizations assess and improv
 | ⚠️ Extra: Vercel KV Storage | Data persistence for project briefs using Vercel KV (Redis) | ✅ Built |
 | ⚠️ Extra: SessionStorage Context Flow | Data flow between tools via sessionStorage without backend sessions | ✅ Built |
 
-**Completion:** 9/9 features built (100%)
-
 ## Getting Started
 
+To get a local copy up and running, follow these simple steps.
+
 ### Prerequisites
-```bash
-node >= 18.0.0
-npm >= 8.0.0
-```
 
-### Installation
-```bash
-git clone https://github.com/osiabu/aperintel.git
-cd aperintel
-npm install
-cp .env.example .env.local
-# Configure your environment variables
-```
+- Node.js
+- npm
 
-### Development
-```bash
-npm run dev
-# Open http://localhost:3000
-```
+### Installation & Setup
 
-### Production
-```bash
-npm run build
-npm start
-```
+1.  Clone the repo
+    ```sh
+    git clone https://github.com/osiabu/aperintel.git
+    ```
+2.  Install NPM packages
+    ```sh
+    npm install
+    ```
+3.  Create a `.env.local` file and add your environment variables.
+4.  Run the development server
+    ```sh
+    npm run dev
+    ```
 
 ## Roadmap
 
 ### Phase 1 — MVP
-- Core intelligence advisory tools
-- AI-powered chat assistant
-- Basic organizational assessment capabilities
+-   Implement core features including the chat assistant and brief generator.
+-   Establish secure data persistence for project briefs.
+-   Deploy initial version to Vercel for live testing.
 
 ### Phase 2 — Growth
-- Advanced analytics and reporting
-- Multi-organization support
-- Integration with external intelligence platforms
+-   Integrate user authentication and multi-tenant organization support.
+-   Expand AI capabilities with fine-tuned models.
+-   Develop a comprehensive analytics dashboard for staff.
 
 ### Phase 3 — Scale
-- Enterprise-grade security and compliance
-- White-label solutions for consultancies
-- Advanced machine learning for predictive intelligence insights
+-   Introduce third-party API integrations for enhanced data enrichment.
+-   Optimize for enterprise-grade performance and security standards.
+-   Build out team collaboration and workflow management features.
 
 ---
 
-**Osi Abu** — Full Stack AI Engineer | https://osiabu.vercel.app
+Osi Abu – Full Stack AI Engineer | https://osiabu.vercel.app
