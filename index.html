@@ -96,14 +96,16 @@
   .nav-cta {
     font-size: 13px !important; font-weight: 500 !important;
     color: var(--white) !important;
-    border: 1px solid var(--border);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-border);
     border-radius: 7px;
     padding: 9px 20px !important;
-    transition: border-color 0.2s !important, background 0.2s !important;
+    transition: border-color 0.2s !important, background 0.2s !important, transform 0.15s !important;
   }
   .nav-cta:hover {
-    border-color: var(--accent-border) !important;
-    background: var(--accent-dim) !important;
+    border-color: var(--accent) !important;
+    background: rgba(91,115,245,0.20) !important;
+    transform: translateY(-1px);
   }
   .hamburger {
     display: none; flex-direction: column; gap: 5px;
@@ -1489,7 +1491,7 @@
     <li><a onclick="showPage('about')" href="#">About</a></li>
     <li><a onclick="showPage('platform')" href="#">Platform</a></li>
     <li><a onclick="showPage('products')" href="#">Products</a></li>
-    <li><a onclick="showPage('contact')" href="#" class="nav-cta">Request Access</a></li>
+    <li><a onclick="showPage('contact')" href="#" class="nav-cta">Get in Touch</a></li>
   </ul>
   <button class="hamburger" onclick="toggleMobile()" aria-label="Open menu">
     <span></span><span></span><span></span>
@@ -1503,7 +1505,7 @@
   <a onclick="showPage('about');closeMobile()" href="#">About</a>
   <a onclick="showPage('platform');closeMobile()" href="#">Platform</a>
   <a onclick="showPage('products');closeMobile()" href="#">Products</a>
-  <a onclick="showPage('contact');closeMobile()" href="#">Request Access</a>
+  <a onclick="showPage('contact');closeMobile()" href="#">Get in Touch</a>
 </div>
 
 <!-- ════════════════════════════════ -->
@@ -1518,7 +1520,7 @@
     <p class="hero-regulated">Built for industries where accountability is not optional.</p>
     <div class="hero-actions btn-row">
       <a href="#" class="btn-primary" onclick="showPage('platform')">Explore Platform</a>
-      <a href="#" class="btn-ghost" onclick="showPage('contact')">Request Access</a>
+      <a href="#" class="btn-ghost" onclick="showPage('contact')">Get in Touch</a>
     </div>
     <div class="hero-scroll">
       <span>Scroll</span>
@@ -1618,7 +1620,7 @@
       <h2 class="reveal">Building the foundation<br>for intelligent systems.</h2>
       <p class="body-text body-text-wide reveal d1">Infrastructure for the next generation of AI-native operations. Quiet, modular, and built to last.</p>
       <div class="btn-row reveal d2">
-        <a href="#" class="btn-primary" onclick="showPage('contact')">Request Access</a>
+        <a href="#" class="btn-primary" onclick="showPage('contact')">Get in Touch</a>
         <a href="#" class="btn-ghost" onclick="showPage('about')">About Aperintel</a>
       </div>
     </div>
@@ -1642,7 +1644,7 @@
           <a onclick="showPage('about')" href="#">About</a>
           <a onclick="showPage('platform')" href="#">Platform</a>
           <a onclick="showPage('products')" href="#">Products</a>
-          <a onclick="showPage('contact')" href="#">Request Access</a>
+          <a onclick="showPage('contact')" href="#">Get in Touch</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
@@ -1714,7 +1716,7 @@
           <a onclick="showPage('about')" href="#">About</a>
           <a onclick="showPage('platform')" href="#">Platform</a>
           <a onclick="showPage('products')" href="#">Products</a>
-          <a onclick="showPage('contact')" href="#">Request Access</a>
+          <a onclick="showPage('contact')" href="#">Get in Touch</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
@@ -1826,7 +1828,7 @@
           <a onclick="showPage('about')" href="#">About</a>
           <a onclick="showPage('platform')" href="#">Platform</a>
           <a onclick="showPage('products')" href="#">Products</a>
-          <a onclick="showPage('contact')" href="#">Request Access</a>
+          <a onclick="showPage('contact')" href="#">Get in Touch</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
@@ -1928,7 +1930,7 @@
         <h2 class="section-title reveal" style="max-width: 480px; margin: 0 auto 20px;">Interested in early access?</h2>
         <p class="body-text reveal d1" style="max-width: 400px; margin: 0 auto 40px; text-align: center;">We work with a limited number of early partners. If your organisation operates in one of these domains, we'd like to hear from you.</p>
         <div class="btn-row reveal d2" style="justify-content: center;">
-          <a href="#" class="btn-primary" onclick="showPage('contact')">Request Access</a>
+          <a href="#" class="btn-primary" onclick="showPage('contact')">Get in Touch</a>
         </div>
       </div>
     </div>
@@ -1952,7 +1954,7 @@
           <a onclick="showPage('about')" href="#">About</a>
           <a onclick="showPage('platform')" href="#">Platform</a>
           <a onclick="showPage('products')" href="#">Products</a>
-          <a onclick="showPage('contact')" href="#">Request Access</a>
+          <a onclick="showPage('contact')" href="#">Get in Touch</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
@@ -2063,7 +2065,7 @@
           <a onclick="showPage('about')" href="#">About</a>
           <a onclick="showPage('platform')" href="#">Platform</a>
           <a onclick="showPage('products')" href="#">Products</a>
-          <a onclick="showPage('contact')" href="#">Request Access</a>
+          <a onclick="showPage('contact')" href="#">Get in Touch</a>
         </div>
         <div class="footer-col">
           <h4>Legal</h4>
